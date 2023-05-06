@@ -13,6 +13,7 @@ General Data Structure:
 5. Counter of # movies in system total
 6. AVL rank tree of all movies according to: rate, views, ID
 
+***Might be easier to just add a field in MultiTree that points to max term always (rather than make rank tree)
 
 Notes:
 -Genre is const
