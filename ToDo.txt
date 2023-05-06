@@ -21,14 +21,14 @@ Notes:
 -Inside movie class - rating field (int)
 -Inside group class - array of genres, where each cell is total number of watches for that genre
 
-Classes:
-1. User:
+Classes: Should we make a parent class that contains only ID and VIP?
+Done!1. User:
     - groupID: pointer to group that belongs to
     - ID
     - views array
     - VIP
     -
-2. Movie:
+Done!2. Movie:
     - rating
     - views
     - genre
