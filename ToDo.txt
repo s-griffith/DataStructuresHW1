@@ -50,7 +50,7 @@ Functions:
     - initialize 7 empty AVL trees, according to the list above
     - counter of # movies in total system = 0
     - etc.
-- virtual ~streaming_database(): *Sarah
+Done!- virtual ~streaming_database(): *Sarah
     - delete
 - add_movie: *Shlomo
     - insert to allMovies AVL tree

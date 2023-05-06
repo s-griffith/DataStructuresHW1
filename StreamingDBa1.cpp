@@ -7,7 +7,15 @@ streaming_database::streaming_database()
 
 streaming_database::~streaming_database()
 {
-	// TODO: Your code goes here
+	if (m_totalMovies > 0) {
+		m_moviesByID.erase_data(m_moviesByID.m_node);
+	}
+	if (m_usersByID.m_node->get_height() >= 0) {
+		m_usersByID.erase_data(m_usersByID.m_node);
+	}
+	if (m_groupsByID.m_node->get_height() >= 0) {
+		m_groupsByID.erase_data(m_groupsByID.m_node);
+	}
 }
 
 
