@@ -1,7 +1,8 @@
-#ifndef WORLD_CUP_SYSTEM_GENERICNODE_H
-#define WORLD_CUP_SYSTEM_GENERICNODE_H
+#ifndef GENERICNODE_H
+#define GENERICNODE_H
+
 #include "Node.h"
-#include "Teams.h"
+#include <iostream>
 
 /*
 * Class Tree : Generic Node
@@ -19,14 +20,6 @@ public:
     GenericNode();
 
     /*
-    * Constructor of GenericNode class
-    * Used in unite_teams to make a new node containing the desired player
-    * @param - data the node holds
-    * @return - A new instance of GenericNode
-    */   
-    GenericNode(T data);
-
-    /*
     * Copy Constructor and Assignment Operator of GenericNode class
     * world_cup does not allow two of the same player or team (repeating ID's).
     * Therefore the system does not allow a copy constructor or assignment operator.
@@ -42,36 +35,12 @@ public:
     ~GenericNode() = default;
 
     /*
-     * Helper function for knockout in world_cup:
-     * Find the number of valid teams within a given range
-     * @param - The minimum and maximum team ID's
-     * @return - the number of teams found
-     */
-    int numOfTeams(const int minTeamID, const int maxTeamID);
-
-    /*
-     * Helper function for knockout in world_cup:
-     * Adds valid teams within a given range to a given array
-     * @param - The array to add the teams to and the minimum and maximum team ID's
-     * @return - none
-     */
-    void addTeams(Team* teams, const int minTeamId, const int maxTeamId);
-
-    /*
      * Helper function for unite_teams in world_cup:
      * Updates the new team ID of each player
      * @param - a pointer to the new team containing the players
      * @return - none
      */
-    void inorderWalkTeamID(Team* team);
-
-    /*
-    * Helper function for unite_teams in world_cup:
-    * Inserts players into a given array, node by node
-    * @param - an array, current index
-    * @return - current index
-    */
-    int unite_insert(Player** players, int index);
+    //void inorderWalkTeamID(Team* team);
 
     /*
     * Returns the height of a node
@@ -125,22 +94,6 @@ private:
     void update_height();
 
     /*
-     * Helper function for knockout in world_cup:
-     * Finds the valid team with the lowest team ID within a given range to a given array
-     * @param - The minimum and maximum team ID's
-     * @return - a pointer to the team found
-     */
-    typename GenericNode<T>::GenericNode* getFirstTeam(const int minTeamId, const int maxTeamId);
-
-    /*
-     * Helper function for unite_teams in world_cup:
-     * Updates the number of games played, player by player
-     * @param - The number of games played by the player's team
-     * @return - a pointer to the team found
-     */
-    void update_games_inorder(const int numTeamGames);
-
-    /*
      * The internal fields of GenericNode: pointers to the parent node and two child nodes
      */
     GenericNode* m_parent;
@@ -154,9 +107,20 @@ private:
     template <class N, class M>
     friend class Tree;
 
+    
+    /*
+     * Helper functions for testing:
+     * Prints a tree, node by node
+     * @param - none
+     * @return - void
+     */    
+    void inorderWalkNode(bool flag);
+    void printNode();
+    void printData();
+
 };
 
-//--------------------------------------------Constructors---------------------------------------------------
+//--------------------------------------------Constructor---------------------------------------------------
 
 template <class T>
 GenericNode<T>::GenericNode() :
@@ -166,52 +130,17 @@ GenericNode<T>::GenericNode() :
         m_right(nullptr)
 {}
 
-template <class T>
-GenericNode<T>::GenericNode(T data) :
-        Node<T>(data),
-        m_parent(nullptr),
-        m_left(nullptr),
-        m_right(nullptr)
-{}
-
-
 //--------------------------------Public Helper Functions for world_cup--------------------------------------------
 
-template<class T>
-int GenericNode<T>::numOfTeams(const int minTeamID, const int maxTeamID) {
-    GenericNode<T>* first = this->getFirstTeam(minTeamID, maxTeamID);
-    if (first == nullptr) {
-        return 0;
-    }
-    return (first->m_data->knockout_count(maxTeamID));
-}
 
-
-template<class T>
-void GenericNode<T>::addTeams(Team* teams, const int minTeamId, const int maxTeamId) {
-    GenericNode<T>* first = this->getFirstTeam(minTeamId, maxTeamId);
-    first->m_data->knockout_insert(teams, maxTeamId);
-}
-
-
-template <class T>
+/*template <class T>
 void GenericNode<T>::inorderWalkTeamID(Team* team) {
     if (this != nullptr && this->m_data != nullptr) {
         m_left->inorderWalkTeamID(team);
         this->m_data->update_team(team);
         m_right->inorderWalkTeamID(team);
     }
-}
-
-template<class T>
-int GenericNode<T>::unite_insert(Player** players, int index) {
-    if (this != nullptr && this->m_data != nullptr) {
-        index = m_left->unite_insert(players, index);
-        *(players+(index++)) = this->m_data;
-        index = m_right->unite_insert(players, index);
-    }
-    return index;
-}
+}*/
 
 
 template<class T>
@@ -338,45 +267,53 @@ void GenericNode<T>::update_height()
     }
 }
 
+//------------------------------------Printing Functions for Testing-------------------------------------------------
 
-//---------------------------------Private Helper Functions for world_cup---------------------------------------------
-
-template<class T>
-typename GenericNode<T>::GenericNode* GenericNode<T>::getFirstTeam(const int minTeamId, const int maxTeamId){
-    GenericNode<Team*>* x = this;
-    GenericNode<Team*>* y = nullptr;
-    while (x != nullptr) {
-        y = x;
-        if (x->m_id == minTeamId) {
-            return x;
-        }
-        if (minTeamId < x->m_id) {
-            x = x->m_left;
-        }
-        else {
-            x = x->m_right;
-        }
+template <class T>
+void GenericNode<T>::printNode() {
+    int parent, left, right;
+    if (m_parent == nullptr) {
+        parent = -1;
     }
-    while (y->m_id < minTeamId && (y->m_parent != nullptr && y->m_parent->m_id <= maxTeamId)) {
-        y = y->m_parent;
+    else {
+        parent = m_parent->m_id;
     }
-    if (y->m_id < minTeamId) {
-        return nullptr;
+    if (m_left == nullptr) {
+        left = -1;
     }
-    return y;
+    else {
+        left = m_left->m_id;
+    }
+    if (m_right == nullptr) {
+        right = -1;
+    }
+    else {
+        right = m_right->m_id;
+    }
+    std::cout << "ID = " << this->m_id << ", Parent = " << parent << ", Left = " << left << ", Right = " << right << ", Height = " << this->m_height << ", BF = " << this->m_bf << std::endl;
 }
 
 
 template <class T>
-void GenericNode<T>::update_games_inorder(const int numTeamGames) {
-    if (this != nullptr && this->m_data != nullptr) {
-        m_left->update_games_inorder(numTeamGames);
-        this->m_data->update_gamesPlayed(numTeamGames);
-        m_right->update_games_inorder(numTeamGames);
-    }
+void GenericNode<T>::printData() {
+    std::cout << "Data = " << this->m_data << std::endl;
 }
 
 
+template <class T>
+void GenericNode<T>::inorderWalkNode(bool flag) {
+    if (this != nullptr) {
+        m_left->inorderWalkNode(flag);
+        if (flag) {
+            this->printNode();
+        }
+        else {
+            this->printData();
+        }
+        m_right->inorderWalkNode(flag);
+    }
+}
+
 //-----------------------------------------------------------------------------------------------------------
 
-#endif //WORLD_CUP_SYSTEM_GENERICNODE_H
+#endif //GENERICNODE_H

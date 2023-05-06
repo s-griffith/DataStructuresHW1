@@ -35,7 +35,7 @@ Done!2. Movie:
     - ID
     - VIP
     - number of people who rated the movie (int)
-3. Group:
+Done!3. Group:
     - AVL tree of pointers of type user
     - array of genres, where each cell is total number of views for that genre (totalViews)
     - ID

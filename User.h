@@ -3,8 +3,8 @@
 
 class Group;
 
-#include "Group.h"
 #include "wet1util.h"
+#include "Group.h"
 
 /*
 * Class User

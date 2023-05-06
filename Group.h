@@ -1,9 +1,12 @@
 #ifndef GROUP_H
 #define GROUP_H
 
+#include "wet1util.h"
+#include "GenericNode.h"
 #include "AVLTree.h"
 #include "User.h"
-#include "GenericNode.h"
+
+class User; //check if really need this!
 
 /*
 * Class Group

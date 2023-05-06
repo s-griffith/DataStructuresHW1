@@ -9,7 +9,7 @@
 /*
 * Class MultiTree : Tree
 * This class is used to create a tree based on ComplexNode that is sorted by three keys:
-*       the number of goals the player scored, the number of cards they received, and their player ID
+*       the movie's rating, the number of views it received, and its movie ID
 */
 template <class T>
 class MultiTree : public Tree<ComplexNode<T>, T> {
@@ -24,7 +24,7 @@ public:
 
     /*
     * Copy Constructor and Assignment Operator of MultiTree class
-    * world_cup does not allow two of the same player or team (repeating ID's).
+    * streaming does not allow two of the same user or movie (repeating ID's).
     * Therefore the system does not allow a copy constructor or assignment operator.
     */
     MultiTree(const MultiTree& other) = delete;
@@ -38,18 +38,18 @@ public:
     ~MultiTree() = default;
 
     /*
-     * Insert new node with data, according to the id, goals, and cards given
-     * @param - New data to insert and the ID, goals, and cards of the new node
+     * Insert new node with data, according to the id, views, and rating given
+     * @param - New data to insert and the ID, views, and rating of the new node
      * @return - void
      */
-    void insert(T data, const int id, const int goals, const int cards);
+    void insert(T data, const int id, const int views, const int rating);
 
     /*
-     * Remove node according to the id, goals, and cards given
-     * @param - The ID, goals, and cards of the node that needs to be removed
+     * Remove node according to the id, views, and rating given
+     * @param - The ID, views, and rating of the node that needs to be removed
      * @return - void
      */
-    void remove(const int id, const int goals, const int cards);
+    void remove(const int id, const int views, const int rating);
 
     /*
      * Search for max node by going down the right side of the tree
@@ -59,68 +59,42 @@ public:
     T& search_and_return_max();
     
     /*
-     * Search for a specific node, according to the id, goals, and cards given
-     * @param - The ID, goals, and cards of the requested node
+     * Search for a specific node, according to the id, views, and rating given
+     * @param - The ID, views, and rating of the requested node
      * @return - the data of the node
      */
-    T& search_and_return_data(const int id, const int goals, const int cards);
+    T& search_and_return_data(const int id, const int views, const int rating);
 
     /*
-     * Search for node with a specific id, according to the id, goals, and cards given
-     * @param - The ID, goals, and cards of the requested node
+     * Search for node with a specific id, according to the id, views, and rating given
+     * @param - The ID, views, and rating of the requested node
      * @return - the requested node
      */
-    ComplexNode<T>& search_specific_id(const int id, const int goals, const int cards);
+    ComplexNode<T>& search_specific_id(const int id, const int views, const int rating);
 
     /*
-     * Recursively search the tree, according to the id, goals, and cards given, starting with the root
-     * @param - The ID, goals, and cards of the requested node, and the root of its tree
+     * Recursively search the tree, according to the id, views, and rating given, starting with the root
+     * @param - The ID, views, and rating of the requested node, and the root of its tree
      * @return - the requested node
      */
-    ComplexNode<T>& search_recursively(const int id, const int goals, const int cards, ComplexNode<T>* currentNode);
+    ComplexNode<T>& search_recursively(const int id, const int views, const int rating, ComplexNode<T>* currentNode);
 
     /*
-     * Helper function for get_all_players in world_cup:
-     * Recursively inserts the player ID's of the data of the tree into a given array
+     * Helper function for get_all_movies in streaming:
+     * Recursively inserts the movie ID's of the data of the tree into a given array
      * @param - an array
      * @return - void
      */
     void get_all_data(int* const array) const;
 
+    
     /*
-     * Helper function for get_closest_player in world_cup:
-     * Updates the closest player pointers of the given player
-     * @param - PlayerID, goals, cards
+     * Helper function for testing:
+     * Prints the tree, node by node
+     * @param - none
      * @return - void
      */
-    void update_closest(const int playerId, const int goals, const int cards);
-
-    /*
-     * Helper function for unite_teams in world_cup:
-     * Creates a tree from a given ordered array
-     * @param - a pointer to the array and its final index
-     * @return - void
-     */
-    void insertInorder(T* data, const int end);
-
-private:
-
-    /*
-     * Helper function for unite_teams in world_cup:
-     * Recursively inserts the data from the array into a tree
-     * @param - a pointer to the array, its starting index, and its final index
-     * @return - a pointer to the root node at the end of the insertions
-     */
-    ComplexNode<T>* insertInorderRecursive(T* data, const int start, const int end);
-
-    /*
-     * Helper functions for update_closest:
-     * Finds the right and left closest players
-     * @param - ComplexNode of the current player
-     * @return - ComplexNode of the closest player
-     */
-    typename ComplexNode<T>::ComplexNode* findLeftClosest(ComplexNode<T>* currentPlayerNode);
-    typename ComplexNode<T>::ComplexNode* findRightClosest(ComplexNode<T>* currentPlayerNode);
+    void print_tree();
 };
 
 
@@ -131,18 +105,19 @@ MultiTree<T>::MultiTree() :
     Tree<ComplexNode<T>, T>()
 {}
 
-
 //----------------------------------Insert and Remove---------------------------------
+//Highest rating --> Highest views --> Lowest ID number
+//Highest goals --> Highest Cards --> Lowest ID
 
 template<class T>
-void MultiTree<T>::insert(T data, const int id, const int goals, const int cards) {
+void MultiTree<T>::insert(T data, const int id, const int views, const int rating) {
     //If this is the first node in the tree:
     if (this->m_node->m_height == -1) {
         this->m_node->m_data = data;
         this->m_node->m_id = id;
         this->m_node->m_height++;
-        this->m_node->m_goals = goals;
-        this->m_node->m_cards = cards;
+        this->m_node->m_rating = rating;
+        this->m_node->m_views = views;
         return;
     }
     //Find the proper location of the new node (when it's not the first):
@@ -154,16 +129,15 @@ void MultiTree<T>::insert(T data, const int id, const int goals, const int cards
             //A node with that id already exists - invalid operation
             throw InvalidID(); 
         }
-        //maybe make this into a switch case
-        if (goals < x->m_goals) {
+        if (rating < x->m_rating) {
             x = x->m_left;
         }
-        else if (goals == x->m_goals) {
-            if (cards > x->m_cards) {
+        else if (rating == x->m_rating) {
+            if (views < x->m_views) {
                 x = x->m_left;
             }
-            else if (cards == x->m_cards) {
-                if (id < x->m_id) {
+            else if (views == x->m_views) {
+                if (id > x->m_id) {
                     x = x->m_left;
                 }
                 else {
@@ -192,19 +166,19 @@ void MultiTree<T>::insert(T data, const int id, const int goals, const int cards
     node->m_left = nullptr;
     node->m_right = nullptr;
     node->m_data = data;
-    node->m_goals = goals;
-    node->m_cards = cards;
+    node->m_rating = rating;
+    node->m_views = views;
     node->m_id = id;
     node->m_height = 0;
-    if (node->m_goals < parent->m_goals) {
+    if (node->m_rating < parent->m_rating) {
         parent->m_left = node;
     }
-    else if (node->m_goals == parent->m_goals) {
-        if (node->m_cards > parent->m_cards) {
+    else if (node->m_rating == parent->m_rating) {
+        if (node->m_views < parent->m_views) {
             parent->m_left = node;
         }
-        else if (node->m_cards == parent->m_cards) {
-            if (node->m_id < parent->m_id) {
+        else if (node->m_views == parent->m_views) {
+            if (node->m_id > parent->m_id) {
                 parent->m_left = node;
             }
             else {
@@ -223,18 +197,18 @@ void MultiTree<T>::insert(T data, const int id, const int goals, const int cards
 
 
 template<class T>
-void MultiTree<T>::remove(const int id, const int goals, const int cards) {
+void MultiTree<T>::remove(const int id, const int views, const int rating) {
     if (this->m_node->m_id == id && this->m_node->m_right == nullptr && this->m_node->m_left == nullptr 
                                                                                 && this->m_node->m_parent == nullptr) {
         this->m_node->m_data = nullptr;
         this->m_node->m_height = -1;
         this->m_node->m_bf = 0;
         this->m_node->m_id = 0;
-        this->m_node->m_goals = 0;
-        this->m_node->m_cards = 0;
+        this->m_node->m_rating = 0;
+        this->m_node->m_views = 0;
         return;
     }
-    ComplexNode<T>* toRemove = &(search_specific_id(id, goals, cards));
+    ComplexNode<T>* toRemove = &(search_specific_id(id, views, rating));
     ComplexNode<T>* nodeToFix = Tree<ComplexNode<T>, T>::make_node_leaf(toRemove);
     delete toRemove;
     //Go up the tree and check the balance factors and complete needed rotations
@@ -255,19 +229,19 @@ T& MultiTree<T>::search_and_return_max() {
 
 
 template<class T>
-T& MultiTree<T>::search_and_return_data(const int id, const int goals, const int cards) {
-    return search_recursively(id, goals, cards, this->m_node).m_data;
+T& MultiTree<T>::search_and_return_data(const int id, const int views, const int rating) {
+    return search_recursively(id, views, rating, this->m_node).m_data;
 }
 
 
 template<class T>
-ComplexNode<T>& MultiTree<T>::search_specific_id(const int id, const int goals, const int cards) {
-    return search_recursively(id, goals, cards, this->m_node);
+ComplexNode<T>& MultiTree<T>::search_specific_id(const int id, const int views, const int rating) {
+    return search_recursively(id, views, rating, this->m_node);
 }
 
 
 template<class T>
-ComplexNode<T>& MultiTree<T>::search_recursively(const int id, const int goals, const int cards,
+ComplexNode<T>& MultiTree<T>::search_recursively(const int id, const int views, const int rating,
              ComplexNode<T>* currentNode) {
     if (currentNode == nullptr) {
         throw NodeNotFound();
@@ -275,20 +249,20 @@ ComplexNode<T>& MultiTree<T>::search_recursively(const int id, const int goals, 
     if (currentNode->m_id == id) {
         return *currentNode;
     }
-    if (currentNode->m_goals < goals) {
-        return search_recursively(id, goals, cards, currentNode->m_right);
+    if (currentNode->m_rating < rating) {
+        return search_recursively(id, views, rating, currentNode->m_right);
     }
-    if (currentNode->m_cards > cards && currentNode->m_goals == goals) {
-        return search_recursively(id, goals, cards, currentNode->m_right);
+    if (currentNode->m_views < views && currentNode->m_rating == rating) {
+        return search_recursively(id, views, rating, currentNode->m_right);
     }
-    if (currentNode->m_id < id && currentNode->m_goals == goals && currentNode->m_cards == cards) {
-        return search_recursively(id, goals, cards, currentNode->m_right);
+    if (currentNode->m_id > id && currentNode->m_rating == rating && currentNode->m_views == views) {
+        return search_recursively(id, views, rating, currentNode->m_right);
     }
-    return search_recursively(id, goals, cards, currentNode->m_left);
+    return search_recursively(id, views, rating, currentNode->m_left);
 }
 
 
-//-----------------------------------------Helper Functions for world_cup-----------------------------------------
+//-----------------------------------------Helper Functions for streaming-----------------------------------------
 
 template <class T>
 void MultiTree<T>::get_all_data(int* const array) const
@@ -298,121 +272,11 @@ void MultiTree<T>::get_all_data(int* const array) const
     }
 }
 
+//-----------------------------------------Helper Function for Testing--------------------------
 
 template<class T>
-void MultiTree<T>::update_closest(const int playerId, const int goals, const int cards)
-{
-    //Search for specific node
-    typename ComplexNode<T>::ComplexNode* currentPlayer = &(this->search_specific_id(playerId, goals, cards));
-    //Get closest node to the left of the other tree node
-    typename ComplexNode<T>::ComplexNode* closestLeft = findLeftClosest(currentPlayer);
-    if (closestLeft != nullptr) {
-        currentPlayer->m_data->update_closest_left(closestLeft->m_data);
-    }
-    else {
-        currentPlayer->m_data->update_closest_left(nullptr);
-    }
-    //Get closest node to the right of the other tree node
-    typename ComplexNode<T>::ComplexNode* closestRight = findRightClosest(currentPlayer);
-    if (closestRight != nullptr) {
-        currentPlayer->m_data->update_closest_right(closestRight->m_data);
-    }
-    else {
-        currentPlayer->m_data->update_closest_right(nullptr);
-    }
-}
-
-
-template <class T>
-typename ComplexNode<T>::ComplexNode* MultiTree<T>::findLeftClosest(ComplexNode<T>* currentPlayerNode)
-{
-    typename ComplexNode<T>::ComplexNode* closestLeft = currentPlayerNode;
-    if (closestLeft->m_left != nullptr) {
-        closestLeft = closestLeft->m_left;
-        while (closestLeft->m_right != nullptr) {
-            closestLeft = closestLeft->m_right;
-        }
-    }
-    else if ((currentPlayerNode->m_parent != nullptr) && (currentPlayerNode->m_parent->m_right == currentPlayerNode)) {
-        closestLeft = currentPlayerNode->m_parent;
-    }
-    else if (currentPlayerNode->m_parent != nullptr) {
-        while (closestLeft->m_parent != nullptr && closestLeft->m_parent->m_left == closestLeft) {
-            closestLeft = closestLeft->m_parent;
-        }
-        if (closestLeft->m_parent == nullptr) {
-            closestLeft = nullptr;
-        }
-        else {
-            closestLeft = closestLeft->m_parent;
-        }
-    }
-    if ((closestLeft != nullptr) && (closestLeft->m_id != currentPlayerNode->m_id)) {
-        return closestLeft;
-    }
-    return nullptr;
-}
-
-
-template <class T>
-typename ComplexNode<T>::ComplexNode* MultiTree<T>::findRightClosest(ComplexNode<T>* currentPlayerNode)
-{
-    typename ComplexNode<T>::ComplexNode* closestRight = currentPlayerNode;
-    if (closestRight->m_right != nullptr) {
-        closestRight = closestRight->m_right;
-        while (closestRight->m_left != nullptr) {
-            closestRight = closestRight->m_left;
-        }
-    }
-    else if ((currentPlayerNode->m_parent != nullptr) && (currentPlayerNode->m_parent->m_left == currentPlayerNode)) {
-        closestRight = currentPlayerNode->m_parent;
-    }
-    else if (currentPlayerNode->m_parent != nullptr) {
-        while (closestRight->m_parent != nullptr && closestRight->m_parent->m_right == closestRight) {
-            closestRight = closestRight->m_parent;
-        }
-        if (closestRight->m_parent == nullptr) {
-            closestRight = nullptr;
-        }
-        else {
-            closestRight = closestRight->m_parent;
-        }
-    }
-    if ((closestRight != nullptr) && (closestRight->m_id != currentPlayerNode->m_id)) {
-        return closestRight;
-    }
-    return nullptr;
-}
-
-
-template <class T>
-void MultiTree<T>::insertInorder(T* data, const int end) {
-    ComplexNode<T>* tmp = this->m_node;
-    this->m_node = insertInorderRecursive(data, 0, end);
-    delete tmp;
-}
-
-template <class T>
-ComplexNode<T>* MultiTree<T>::insertInorderRecursive(T* data, const int start, const int end) {
-    //Stop recursion
-    if (start > end)
-        return nullptr;
-    //Get the middle player and make root
-    int mid = (start + end)/2;
-    ComplexNode<T>* root = new ComplexNode<T>(data[mid]);
-    //Construct left subtree
-    root->m_left =  insertInorderRecursive(data, start, mid-1);
-    if (root->m_left != nullptr) {
-        root->m_left->m_parent = root;
-    }
-    //Construct right subtree
-    root->m_right = insertInorderRecursive(data, mid+1, end);
-    if (root->m_right != nullptr) {
-        root->m_right->m_parent = root;
-    }
-    root->update_bf();
-    root->update_height();
-    return root;
+void MultiTree<T>::print_tree() {
+    this->m_node->inorderWalkNode(1);
 }
 
 //----------------------------------------------------------------------------------------------

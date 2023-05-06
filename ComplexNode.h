@@ -2,12 +2,13 @@
 #define COMPLEXNODE_H
 
 #include "Node.h"
-#include "Player.h"
+#include "Movie.h"
+#include <iostream>
 
 /*
 * Class Complex Node : Node
 * This class is used to create separate nodes in the tree, sorted based on three keys:
-*       the number of goals the player scored, the number of cards they received and their player ID
+*       the movie's rating, the number of views it received, and its movie ID
 */
 template <class T>
 class ComplexNode : Node<T> {
@@ -21,16 +22,8 @@ public:
     ComplexNode();
 
     /*
-    * Constructor of ComplexNode class
-    * Used in unite_teams to make a new node containing the desired player
-    * @param - data the node holds
-    * @return - A new instance of ComplexNode
-    */     
-    ComplexNode(T data);
-
-    /*
     * Copy Constructor and Assignment Operator of ComplexNode class
-    * world_cup does not allow two of the same player or team (repeating ID's).
+    * streaming does not allow two of the same movie (repeating ID's).
     * Therefore the system does not allow a copy constructor or assignment operator.
     */
     ComplexNode(const ComplexNode&) = delete;
@@ -43,13 +36,6 @@ public:
     */
     virtual ~ComplexNode() = default;
 
-    /*
-    * Helper function for unite_teams in world_cup:
-    * Inserts players into a given array, node by node
-    * @param - an array, current index
-    * @return - current index
-    */
-    int unite_insert(Player** players, int index);
 
 private:
 
@@ -96,8 +82,8 @@ private:
     void update_height();
 
     /*
-     * Helper function for get_all_players in world_cup:
-     * Recursively inserts the player ID's of the data of the tree into a given array
+     * Helper function for get_all_movies in streaming:
+     * Recursively inserts the movie ID's of the data of the tree into a given array
      * @param - an array, current index
      * @return - void
      */
@@ -112,8 +98,8 @@ private:
     ComplexNode<T>* m_parent;
     ComplexNode<T>* m_left;
     ComplexNode<T>* m_right;
-    int m_goals;
-    int m_cards;
+    int m_views;
+    int m_rating;
 
     /*
      * The following classes are friend classes in order to allow full access to private fields and functions of
@@ -123,16 +109,23 @@ private:
     template <class M>
     friend class MultiTree;
 
-    template <class K>
-    friend class TreeExtraPointer;
-
     template <class ComplexNode, class N>
     friend class Tree;
     
+    /*
+     * Helper functions for testing:
+     * Prints a tree, node by node
+     * @param - none
+     * @return - void
+     */
+    void inorderWalkNode(bool flag);
+    void printNode();
+    void printData();
+
 };
 
 
-//---------------------------------------Constructor and Public Helper Function--------------------------
+//---------------------------------------Constructor-------------------------------
 
 template <class T>
 ComplexNode<T>::ComplexNode() :
@@ -140,31 +133,9 @@ ComplexNode<T>::ComplexNode() :
         m_parent(nullptr),
         m_left(nullptr),
         m_right(nullptr),
-        m_goals(0),
-        m_cards(0)
+        m_views(0),
+        m_rating(0)
 {}
-
-
-template <class T>
-ComplexNode<T>::ComplexNode(T data) :
-        Node<T>(data),
-        m_parent(nullptr),
-        m_left(nullptr),
-        m_right(nullptr),
-        m_goals(data->get_goals()),
-        m_cards(data->get_cards())
-{}
-
-
-template<class T>
-int ComplexNode<T>::unite_insert(Player** players, int index) {
-    if (this != nullptr && this->m_data != nullptr) {
-        index = m_left->unite_insert(players, index);
-        *(players+(index++)) = this->m_data;
-        index = m_right->unite_insert(players, index);
-    }
-    return index;
-}
 
 //-----------------------------------------Rotations--------------------------------------------
 
@@ -285,7 +256,7 @@ void ComplexNode<T>::update_height()
 }
 
 
-//--------------------------------------Private Helper Function for world_cup---------------------------------------
+//--------------------------------------Private Helper Function for streaming---------------------------------------
 
 template <class T>
 int ComplexNode<T>::get_data_inorder(int* const array, int index) const
@@ -298,6 +269,51 @@ int ComplexNode<T>::get_data_inorder(int* const array, int index) const
     return index;
 }
 
+template <class T>
+void ComplexNode<T>::printNode() {
+    int parent, left, right;
+    if (m_parent == nullptr) {
+        parent = -1;
+    }
+    else {
+        parent = m_parent->m_id;
+    }
+    if (m_left == nullptr) {
+        left = -1;
+    }
+    else {
+        left = m_left->m_id;
+    }
+    if (m_right == nullptr) {
+        right = -1;
+    }
+    else {
+        right = m_right->m_id;
+    }
+    std::cout << "ID = " << Node<T>::m_id << ", Parent = " << parent << ", Left = " 
+            << left << ", Right = " << right << std::endl;
+}
+
+
+template <class T>
+void ComplexNode<T>::printData() {
+    std::cout << "ID = " << Node<T>::m_id << std::endl;
+}
+
+
+template <class T>
+void ComplexNode<T>::inorderWalkNode(bool flag) {
+    if (this != nullptr) {
+        m_left->inorderWalkNode(flag);
+        if (flag) {
+            this->printNode();
+        }
+        else {
+            this->printData();
+        }
+        m_right->inorderWalkNode(flag);
+    }
+}
 
 //-----------------------------------------------------------------------------------------------------------
 

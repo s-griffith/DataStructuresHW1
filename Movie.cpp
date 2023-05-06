@@ -30,7 +30,7 @@ Genre Movie::get_genre() const
 
 //---------------------------------------Setters---------------------------------------------
 
-void Movie::add_view(const int viewers = 1) 
+void Movie::add_view(const int viewers) 
 {
     m_views += viewers;
 }

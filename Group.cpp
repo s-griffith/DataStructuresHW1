@@ -7,7 +7,7 @@ Group::Group(const int groupID) :
     m_VIP(false),
     m_numUsers(0),
     m_totalViews({0}),
-    m_groupViews({0})
+    m_groupViews({0}),
     m_usersByID()
 {}
 
@@ -30,7 +30,3 @@ int Group::get_numUsers() const
 
 //-------------------------------------Helper Functions for WorldCup----------------------------
 
-StatusType Group::add_user() 
-{
-    
-}
