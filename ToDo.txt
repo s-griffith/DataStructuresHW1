@@ -15,7 +15,7 @@ General Data Structure:
 
 ***Might be easier to just add a field in MultiTree that points to max term always (rather than make rank tree)
 
-Notes:
+Done!Notes:
 -Genre is const
 -Inside user class - each user has a groupPointer --> if null, you know it isn't in any group
 -Inside user class - hold an array of length 5 (one per genre + NONE) that counts number of views of movies of each genre

@@ -16,12 +16,27 @@
 #define STREAMINGDBA1_H_
 
 #include "wet1util.h"
+#include "User.h"
+#include "Movie.h"
+#include "Group.h"
+#include "AVLTree.h"
+#include "GenericNode.h"
+#include "AVLMultiVariable.h"
 
 class streaming_database {
 private:
-	//
-	// Here you may add anything you want
-	//
+
+	int m_totalMovies;
+
+	Tree<GenericNode<Movie*>, Movie*> m_moviesByID;
+	Tree<GenericNode<User*>, User*> m_usersByID;
+	Tree<GenericNode<Group*>, Group*> m_groupsByID;
+
+	MultiTree<Movie*> m_moviesByRating;
+	MultiTree<Movie*> m_comedyByRating;
+	MultiTree<Movie*> m_dramaByRating;
+	MultiTree<Movie*> m_actionByRating;
+	MultiTree<Movie*> m_fantasyByRating;
 	
 public:
 	// <DO-NOT-MODIFY> {
