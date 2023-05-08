@@ -52,7 +52,7 @@ Functions:
     - etc.
 Done!- virtual ~streaming_database(): *Sarah
     - delete
-- add_movie: *Shlomo
+Done!- add_movie: *Shlomo
     - insert to allMovies AVL tree
     - insert to allMovies MultiAVL Tree
     - insert to relevant genre tree (unless genre=NULL)
@@ -61,19 +61,19 @@ Done!- virtual ~streaming_database(): *Sarah
     - delete from AVL tree of allMovies
     - delete from allMovies MultiAVL tree
     - delete from genre tree if relevant
-- add_user: *Shlomo
+Done!- add_user: *Shlomo
     - insert to AllUsers Tree
     - initialize fields
 - remove_user: *Sarah
     - remove from AllUsers tree
     - remove from group tree if in a group
-- add_group: *Shlomo
+Done!- add_group: *Shlomo
     - add group to AVL tree of all groups
     - initialize fields
 - remove_group: *Sarah
     - go over tree of users inside group, set each user's groupID = nullptr
     - remove group from AVL tree
-- add_user_to_group: *Shlomo
+Done!- add_user_to_group: *Shlomo
     - search for user in AllUsers Tree
     - search for group in group Tree
     - add user to group tree's user tree
@@ -95,7 +95,7 @@ Done!- virtual ~streaming_database(): *Sarah
     - ++*(# users) to views in that genre in totalViews
     _ ++*(#users) to views on that movie
     - insert and delete from allMovies MultiAVL tree
-- get_all_movies_count: *Shlomo
+Done! need to check things- get_all_movies_count: *Shlomo
     - go to the AVL rank tree of relevant genre and return number of children held by the root
     - if genre=NONE, return counter of number of movies in system
 - get_all_movies: *Sarah

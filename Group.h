@@ -64,7 +64,7 @@ public:
     * @param - a pointer to the user to be added, its ID, views, and whether it is a VIP
     * @return - StatusType
     */
-   StatusType add_user(User* user, const int userID, int* userViews, bool VIP); //might want to change some of these parameters
+   StatusType add_user(User* user, const int userID, const int*  userViews, bool VIP); //might want to change some of these parameters
 
 
 

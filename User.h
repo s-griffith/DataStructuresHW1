@@ -78,6 +78,8 @@ public:
     */
    output_t<int> get_num_views(Genre genre);
 
+    const int *getMUserViews() const;
+
     /*
     * Helper function for group_watch in streaming
     * Updates the group's stats as needed

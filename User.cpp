@@ -42,3 +42,7 @@ void User::add_view(const Genre genre)
 {
     m_userViews[static_cast<int>(genre)]++;
 }
+
+const int *User::getMUserViews() const {
+    return m_userViews;
+}

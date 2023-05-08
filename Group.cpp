@@ -28,5 +28,17 @@ int Group::get_numUsers() const
     return m_numUsers;
 }
 
+StatusType Group::add_user(User *user, const int userID, const int *userViews, bool VIP) {
+    m_usersByID.insert(user, userID);
+    for(int i=0; i<4; i++)
+    {
+        m_totalViews[i]+=userViews[i];
+        m_groupViews[i]-=userViews[i];
+    }
+    m_VIP = (m_VIP||VIP);
+    m_numUsers++;
+    return StatusType::ALLOCATION_ERROR;
+}
+
 //-------------------------------------Helper Functions for WorldCup----------------------------
 

@@ -6,6 +6,7 @@
 #include "ComplexNode.h"
 #include <iostream>
 #include "wet1util.h"
+#include "StreamingDBa1.h"
 
 int main() {
     Tree<GenericNode<int*>, int*> t1;
@@ -24,4 +25,15 @@ int main() {
     t2.insert(&m3, 3, 4, 1);
     t2.insert(&m4, 4, 2, 4);
     t2.print_tree();
+    streaming_database* ab = new streaming_database();
+    ab->add_movie(5, Genre::FANTASY, 500, false);
+    ab->add_movie(55, Genre::FANTASY, 500, false);
+    ab->add_movie(6, Genre::FANTASY, 500, false);
+    ab->add_movie(7, Genre::FANTASY, 500, false);
+    ab->add_movie(78, Genre::FANTASY, 500, false);
+    ab->add_user(5, 1);
+    ab->add_user(5, 1);
+    ab->add_group(5);
+    ab->add_user_to_group(5, 5);
+    int b=5;
 }

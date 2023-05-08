@@ -13,6 +13,7 @@
 */
 template <class T>
 class MultiTree : public Tree<ComplexNode<T>, T> {
+    int m_numOfNodes;
 public:
 
     /*
@@ -50,6 +51,8 @@ public:
      * @return - void
      */
     void remove(const int id, const int views, const int rating);
+
+    int getMNumOfNodes() const;
 
     /*
      * Search for max node by going down the right side of the tree
@@ -102,7 +105,8 @@ public:
 
 template<class T>
 MultiTree<T>::MultiTree() :
-    Tree<ComplexNode<T>, T>()
+    Tree<ComplexNode<T>, T>(),
+    m_numOfNodes(0)
 {}
 
 //----------------------------------Insert and Remove---------------------------------
@@ -111,6 +115,7 @@ MultiTree<T>::MultiTree() :
 
 template<class T>
 void MultiTree<T>::insert(T data, const int id, const int views, const int rating) {
+    m_numOfNodes++;
     //If this is the first node in the tree:
     if (this->m_node->m_height == -1) {
         this->m_node->m_data = data;
@@ -127,6 +132,7 @@ void MultiTree<T>::insert(T data, const int id, const int views, const int ratin
         parent = x;
         if (x->m_id == id) {
             //A node with that id already exists - invalid operation
+            m_numOfNodes--;
             throw InvalidID(); 
         }
         if (rating < x->m_rating) {
@@ -159,6 +165,7 @@ void MultiTree<T>::insert(T data, const int id, const int views, const int ratin
     }
     catch(const std::bad_alloc& e)
     {
+        m_numOfNodes--;
         delete node;
         throw e;
     }
@@ -206,6 +213,7 @@ void MultiTree<T>::remove(const int id, const int views, const int rating) {
         this->m_node->m_id = 0;
         this->m_node->m_rating = 0;
         this->m_node->m_views = 0;
+        m_numOfNodes--;
         return;
     }
     ComplexNode<T>* toRemove = &(search_specific_id(id, views, rating));
@@ -213,6 +221,9 @@ void MultiTree<T>::remove(const int id, const int views, const int rating) {
     delete toRemove;
     //Go up the tree and check the balance factors and complete needed rotations
     Tree<ComplexNode<T>, T>::rebalance_tree(nodeToFix);
+    ///TODO: check if will decrease if failed
+    m_numOfNodes--;
+
 }
 
 
@@ -277,6 +288,11 @@ void MultiTree<T>::get_all_data(int* const array) const
 template<class T>
 void MultiTree<T>::print_tree() {
     this->m_node->inorderWalkNode(1);
+}
+
+template<class T>
+int MultiTree<T>::getMNumOfNodes() const {
+    return m_numOfNodes;
 }
 
 //----------------------------------------------------------------------------------------------
