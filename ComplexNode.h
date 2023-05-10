@@ -262,9 +262,9 @@ template <class T>
 int ComplexNode<T>::get_data_inorder(int* const array, int index) const
 {
     if (this != nullptr) {
-        index = m_left->get_data_inorder(array, index);
-        array[index++] = this->m_id;
         index = m_right->get_data_inorder(array, index);
+        array[index++] = this->m_id;
+        index = m_left->get_data_inorder(array, index);
     }
     return index;
 }

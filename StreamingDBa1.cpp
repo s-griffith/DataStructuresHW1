@@ -250,9 +250,26 @@ output_t<int> streaming_database::get_all_movies_count(Genre genre)
 
 StatusType streaming_database::get_all_movies(Genre genre, int *const output)
 {
-    // TODO: Your code goes here
-    output[0] = 4001;
-    output[1] = 4002;
+    if (output == nullptr) {
+        return StatusType::INVALID_INPUT;
+    }
+    try {
+        switch (genre) {
+            case Genre::COMEDY:
+                m_comedyByRating.get_all_data(output);
+            case Genre::DRAMA:
+                m_dramaByRating.get_all_data(output);
+            case Genre::ACTION:
+                m_actionByRating.get_all_data(output);
+            case Genre::FANTASY:
+                m_fantasyByRating.get_all_data(output);
+            case Genre::NONE:
+                m_moviesByRating.get_all_data(output);
+        }
+    }
+    catch (const NodeNotFound& e) {
+        return StatusType::FAILURE;
+    }
     return StatusType::SUCCESS;
 }
 

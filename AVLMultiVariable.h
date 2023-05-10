@@ -278,6 +278,9 @@ ComplexNode<T>& MultiTree<T>::search_recursively(const int id, const int views, 
 template <class T>
 void MultiTree<T>::get_all_data(int* const array) const
 {
+    if (m_numOfNodes <= 0) {
+        throw NodeNotFound(); //Maybe make this into something else
+    }
     if (this != nullptr) {
         this->m_node->get_data_inorder(array, 0);
     }
