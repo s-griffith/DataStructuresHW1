@@ -30,7 +30,7 @@ Genre Movie::get_genre() const
 
 double Movie::get_rating() const
 {
-    return m_rating/m_views;
+    return m_rating/m_numRates;
 }
 
 int Movie::get_views() const

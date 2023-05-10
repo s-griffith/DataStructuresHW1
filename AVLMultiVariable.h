@@ -43,7 +43,7 @@ public:
      * @param - New data to insert and the ID, views, and rating of the new node
      * @return - void
      */
-    void insert(T data, const int id, const int views, const int rating);
+    void insert(T data, const int id, const int views, const double rating);
 
     /*
      * Remove node according to the id, views, and rating given
@@ -114,7 +114,7 @@ MultiTree<T>::MultiTree() :
 //Highest goals --> Highest Cards --> Lowest ID
 
 template<class T>
-void MultiTree<T>::insert(T data, const int id, const int views, const int rating) {
+void MultiTree<T>::insert(T data, const int id, const int views, const double rating) {
     m_numOfNodes++;
     //If this is the first node in the tree:
     if (this->m_node->m_height == -1) {

@@ -85,6 +85,13 @@ public:
     */
     output_t<int> get_num_views(Genre genre);
 
+
+    /*
+    * Helper function
+    * Returns the array of views
+    * @param
+    * @return - int*, array of views
+    */
     const int* get_user_views() const;
 
     /*
@@ -109,6 +116,8 @@ private:
     int m_userViews[5]; //an array
     bool m_VIP;
     Group* m_group;
+
+    friend class Group;
 };
 
 #endif //USER_H

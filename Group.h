@@ -94,6 +94,8 @@ public:
     */
    void remove_group();
 
+    const int *getMGroupViews() const;
+
 private:
 
     /*

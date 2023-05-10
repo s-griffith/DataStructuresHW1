@@ -39,7 +39,7 @@ private:
 	MultiTree<Movie*> m_fantasyByRating;
 	
 	//Helper function:
-	void insert_and_remove(const Genre genre, Movie* movie, const int movieId);
+	void insert_and_remove(const Genre genre, Movie* movie, const int movieId, const double oldRating);
 	void remove_by_genre(Movie* movie, const int movieId);
 public:
 	// <DO-NOT-MODIFY> {

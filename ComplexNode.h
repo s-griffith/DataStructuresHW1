@@ -99,7 +99,7 @@ private:
     ComplexNode<T>* m_left;
     ComplexNode<T>* m_right;
     int m_views;
-    int m_rating;
+    double m_rating;
 
     /*
      * The following classes are friend classes in order to allow full access to private fields and functions of

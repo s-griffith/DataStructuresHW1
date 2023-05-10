@@ -43,10 +43,12 @@ void Group::group_watch(const Genre genre)
 
 StatusType Group::add_user(User *user, const int userID, const int *userViews, bool VIP) {
     m_usersByID.insert(user, userID);
+    int temp;
     for(int i=0; i<4; i++) //Might be cleaner to make them friend classes and do this within the user class
     {
-        m_totalViews[i]+=userViews[i]; 
-        m_groupViews[i]-=userViews[i]; //I think this one is backwards
+        temp = user->m_userViews[i];
+        user->m_userViews[i]-=m_groupViews[i];
+        m_totalViews[i]+=temp;
     }
     m_VIP = (m_VIP||VIP); //CHANGE: IF VIP, ADD 1 ALSO: need to update the user's views, not the group's
     m_numUsers++;
@@ -72,4 +74,8 @@ StatusType Group::remove_user(User* user, const int userID, bool VIP)
 void Group::remove_group()
 {
     m_usersByID.remove_users();
+}
+
+const int *Group::getMGroupViews() const {
+    return m_groupViews;
 }
