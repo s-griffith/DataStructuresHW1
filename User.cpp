@@ -38,11 +38,19 @@ void User::update_group(Group* tmpGroup)
     m_group = tmpGroup;
 }
 
+void User::remove_group()
+{
+    m_group = nullptr;
+}
+
 void User::add_view(const Genre genre)
 {
     m_userViews[static_cast<int>(genre)]++;
+    if (m_group != nullptr) {
+        m_group->add_view(genre);
+    }
 }
 
-const int *User::getMUserViews() const {
+const int *User::get_user_views() const { //Need to update this so that it adds the group's views to the user views before returning
     return m_userViews;
 }

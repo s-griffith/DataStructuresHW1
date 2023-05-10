@@ -94,6 +94,14 @@ private:
     void update_height();
 
     /*
+     * Helper function for remove_group in streaming:
+     * Removes each user from the group
+     * @param - none
+     * @return - void
+    */
+    void inorder_remove();
+
+    /*
      * The internal fields of GenericNode: pointers to the parent node and two child nodes
      */
     GenericNode* m_parent;
@@ -267,6 +275,16 @@ void GenericNode<T>::update_height()
     }
 }
 
+//------------------------------------Helper Functions for streaming-------------------------------------------------
+
+template <class T>
+void GenericNode<T>::inorder_remove() {
+    if (this != nullptr && this->m_data != nullptr) {
+        m_left->inorder_remove();
+        this->m_data->remove_group();
+        m_right->inorder_remove();
+    }
+}
 //------------------------------------Printing Functions for Testing-------------------------------------------------
 
 template <class T>

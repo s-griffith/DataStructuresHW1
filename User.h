@@ -64,6 +64,13 @@ public:
     void update_group(Group* tmpGroup);
 
     /*
+    * Reset the user's group to nullptr
+    * @param - none
+    * @return - void
+    */
+    void remove_group();
+
+    /*
     * Increase the user's views of a certain genre
     * @param - genre (index) of the array to increase
     * @return - void
@@ -76,9 +83,9 @@ public:
     * @param - genre of the views to return
     * @return - int, the number of views, StatusType
     */
-   output_t<int> get_num_views(Genre genre);
+    output_t<int> get_num_views(Genre genre);
 
-    const int *getMUserViews() const;
+    const int* get_user_views() const;
 
     /*
     * Helper function for group_watch in streaming
@@ -87,6 +94,7 @@ public:
     * @return - StatusType
     */
    StatusType group_watch(int movieID);
+
 
 private:
 

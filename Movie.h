@@ -54,6 +54,18 @@ public:
     Genre get_genre() const;
 
     /*
+    * Return the movie's rating
+    * @return - Genre
+    */
+    double get_rating() const;
+
+    /*
+    * Return the movie's views
+    * @return - Genre
+    */
+    int get_views() const;
+
+    /*
     * Increase the movie's views
     * @param - int, number of views to increase by (default = 1)
     * @return - void

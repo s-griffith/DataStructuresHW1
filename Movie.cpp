@@ -28,6 +28,16 @@ Genre Movie::get_genre() const
     return m_genre;
 }
 
+double Movie::get_rating() const
+{
+    return m_rating/m_views;
+}
+
+int Movie::get_views() const
+{
+    return m_views;
+}
+
 //---------------------------------------Setters---------------------------------------------
 
 void Movie::add_view(const int viewers) 

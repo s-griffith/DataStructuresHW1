@@ -56,31 +56,57 @@ public:
     * Return the number of users in the group
     * @return - int
     */
-   int get_numUsers() const;
+    int get_numUsers() const;
+
+    /*
+    * Adds a view to a genre when a group user watches a movie
+    * @return - int
+    */
+    void add_view(const Genre genre);
+
+    /*
+    * Adds a view to a genre when the group watches a movie
+    * @return - int
+    */
+    void group_watch(const Genre genre);
 
     /*
     * Helper function for add_user_to_group in streaming:
-    * Adds the user to the grpup and updates the group's stats accordingly
+    * Adds the user to the group and updates the group's stats accordingly
     * @param - a pointer to the user to be added, its ID, views, and whether it is a VIP
     * @return - StatusType
     */
    StatusType add_user(User* user, const int userID, const int*  userViews, bool VIP); //might want to change some of these parameters
 
+    /*
+    * Helper function for remove_user in streaming:
+    * Removes the user from the group and updates the group's stats accordingly
+    * @param - a pointer to the user to be removed, its ID, and whether it is a VIP
+    * @return - StatusType
+    */
+   StatusType remove_user(User* user, const int userID, bool VIP);
 
+    /*
+    * Helper function for remove_group in streaming:
+    * Removes the users from the group
+    * @param - none
+    * @return - void
+    */
+   void remove_group();
 
 private:
 
     /*
      * The internal fields of group:
      *   The group's ID
-     *   Whether the group is a VIP group
+     *   The number of VIP users the group has
      *   The number of users the group has
      *   The total number of movie views the group has according to genre
      *   The number of movie views the group has as a group, according to genre
      *   An AVL tree of the group's users organized by their ID numbers
      */
     int m_id;
-    bool m_VIP;
+    int m_VIP;
     int m_numUsers;
     int m_totalViews[5];
     int m_groupViews[5]; //might need to make the users a friend class so they can access this

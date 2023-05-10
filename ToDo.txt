@@ -57,20 +57,20 @@ Done!- add_movie: *Shlomo
     - insert to allMovies MultiAVL Tree
     - insert to relevant genre tree (unless genre=NULL)
     - define fields as given
-- remove_move: *Sarah
+Done! - remove_move: *Sarah
     - delete from AVL tree of allMovies
     - delete from allMovies MultiAVL tree
     - delete from genre tree if relevant
 Done!- add_user: *Shlomo
     - insert to AllUsers Tree
     - initialize fields
-- remove_user: *Sarah
+Done! - remove_user: *Sarah
     - remove from AllUsers tree
     - remove from group tree if in a group
 Done!- add_group: *Shlomo
     - add group to AVL tree of all groups
     - initialize fields
-- remove_group: *Sarah
+ Done! - remove_group: *Sarah
     - go over tree of users inside group, set each user's groupID = nullptr
     - remove group from AVL tree
 Done!- add_user_to_group: *Shlomo
@@ -80,14 +80,14 @@ Done!- add_user_to_group: *Shlomo
     - update user's groupID pointer
     - add the user's views from each genre to the total views array (totalViews)
     - subtract the user's views from total views for each genre in the group's node (GroupViews array)
-- user_watch: *Sarah
+Done! - user_watch: *Sarah
     - find user and movie
     - check if user is VIP and if movie is VIP
     - increase views on movie by 1
     - insert and delete from allMovies MultiAVL tree
     - ++ to views in that genre for user
     - ++ to views in that genre for user's group (if exists) in totalViews
-- group_watch: *Sarah
+Done! - group_watch: *Sarah
     - find group in tree
     - find movie
     - check VIP thing

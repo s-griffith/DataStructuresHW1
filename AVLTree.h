@@ -103,6 +103,8 @@ public:
     */
     void get_all_data(int* const array) const;
 
+    void remove_users();
+
     /*
      * Helper function for testing:
      * Prints the tree, node by node
@@ -356,6 +358,12 @@ void Tree<N, T>::get_all_data(int* const array) const
     if (this != nullptr) {
         m_node->get_data_inorder(array, 0);
     }
+}
+
+template <class N, class T>
+void Tree<N, T>::remove_users()
+{
+    m_node->inorder_remove();
 }
 
 //-----------------------------------------Internal Helper Functions-----------------------------------------
