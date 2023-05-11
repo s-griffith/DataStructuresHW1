@@ -67,6 +67,12 @@ StatusType streaming_database::add_movie(int movieId, Genre genre, int views, bo
         delete newMovie;
         return StatusType::ALLOCATION_ERROR;
     }
+    catch (const InvalidID& e) {
+        m_moviesByID.remove(movieId);
+        m_moviesByRating.remove(movieId, views, 0);
+        delete newMovie;
+        return StatusType::FAILURE;
+    }
 	return StatusType::SUCCESS;
 }
 
@@ -93,8 +99,9 @@ StatusType streaming_database::remove_movie(int movieId)
 
 StatusType streaming_database::add_user(int userId, bool isVip)
 {
-	if(userId<=0)
+	if(userId<=0) {
         return StatusType::INVALID_INPUT;
+    }
     User *newUser;
     try {
         newUser = new User(userId, isVip);
@@ -109,7 +116,6 @@ StatusType streaming_database::add_user(int userId, bool isVip)
         return StatusType::FAILURE;
     }
     return StatusType::SUCCESS;
-	return StatusType::SUCCESS;
 }
 
 StatusType streaming_database::remove_user(int userId)
@@ -139,8 +145,9 @@ StatusType streaming_database::remove_user(int userId)
 
 StatusType streaming_database::add_group(int groupId)
 {
-    if(groupId<=0)
+    if(groupId<=0) {
         return StatusType::INVALID_INPUT;
+    }
     Group *newGroup;
     try {
         newGroup = new Group(groupId);
@@ -150,7 +157,7 @@ StatusType streaming_database::add_group(int groupId)
         delete newGroup;
         return StatusType::ALLOCATION_ERROR;
     }
-    catch (InvalidID &e) { ///TODO how
+    catch (InvalidID &e) {
     delete newGroup;
         return StatusType::FAILURE;
     }
@@ -179,20 +186,23 @@ StatusType streaming_database::remove_group(int groupId)
 
 StatusType streaming_database::add_user_to_group(int userId, int groupId)
 {
-    if(userId<=0 || groupId<=0)
+    if(userId<=0 || groupId<=0) {
         return StatusType::INVALID_INPUT;
+    }
     User* user;
     Group* group;
     try {
         user = m_usersByID.search_and_return_data(userId);
         group = m_groupsByID.search_and_return_data(groupId);
     }
-    catch (InvalidID &e) { ///TODO how
+    catch (const InvalidID &e) {
         return StatusType::FAILURE;
     }
-    if(!user->get_group())
-    {
-        group->add_user(user, userId, user->get_user_views(), user->isVIP());
+    catch (const NodeNotFound& e) {
+        return StatusType::FAILURE;
+    }
+    if(!user->get_group()) {
+        group->add_user(user, userId, user->isVIP());
         user->update_group(group);
     }
     return StatusType::SUCCESS;
@@ -260,15 +270,19 @@ output_t<int> streaming_database::get_all_movies_count(Genre genre)
     switch (genre) {
         case (Genre::COMEDY):
             return m_comedyByRating.getMNumOfNodes();
+            break;
         case Genre::DRAMA:
             return m_dramaByRating.getMNumOfNodes();
+            break;
         case Genre::ACTION:
             return m_actionByRating.getMNumOfNodes();
+            break;
         case Genre::FANTASY:
             return m_fantasyByRating.getMNumOfNodes();
+            break;
         case Genre::NONE:
             return m_totalMovies;
-
+            break;
     }
 }
 
@@ -281,14 +295,19 @@ StatusType streaming_database::get_all_movies(Genre genre, int *const output)
         switch (genre) {
             case Genre::COMEDY:
                 m_comedyByRating.get_all_data(output);
+                break;
             case Genre::DRAMA:
                 m_dramaByRating.get_all_data(output);
+                break;
             case Genre::ACTION:
                 m_actionByRating.get_all_data(output);
+                break;
             case Genre::FANTASY:
                 m_fantasyByRating.get_all_data(output);
+                break;
             case Genre::NONE:
                 m_moviesByRating.get_all_data(output);
+                break;
         }
     }
     catch (const NodeNotFound& e) {
@@ -299,15 +318,12 @@ StatusType streaming_database::get_all_movies(Genre genre, int *const output)
 
 output_t<int> streaming_database::get_num_views(int userId, Genre genre)
 {
-	if(userId<=0)
+	if(userId<=0) {
         return StatusType::INVALID_INPUT;
+    }
     try {
         User* user = m_usersByID.search_and_return_data(userId);
-        if (!user->get_group()) {
-            return user->get_user_views()[static_cast<int>(genre)] ;
-        }
-        Group* group = user->get_group();
-        return user->get_user_views()[static_cast<int>(genre)] +group->getMGroupViews()[static_cast<int>(genre)];
+        return user->get_num_views(genre); 
     }
     catch (const NodeNotFound& e) {
         return StatusType::FAILURE;
@@ -316,15 +332,15 @@ output_t<int> streaming_database::get_num_views(int userId, Genre genre)
 
 StatusType streaming_database::rate_movie(int userId, int movieId, int rating)
 {
-    if(userId<=0|| movieId<=0 || rating<0 ||rating>100)
+    if(userId<=0|| movieId<=0 || rating<0 ||rating>100) {
         return StatusType::INVALID_INPUT;
-    User* user;
-    Movie* movie;
+    }
     try{
-        user = m_usersByID.search_and_return_data(userId);
-        movie = m_moviesByID.search_and_return_data(movieId);
-        if(movie->isVIP()&&!user->isVIP())
+        User* user = m_usersByID.search_and_return_data(userId);
+        Movie* movie = m_moviesByID.search_and_return_data(movieId);
+        if(movie->isVIP()&&!user->isVIP()) {
             return StatusType::FAILURE;
+        }
         double oldRating = movie->get_rating();
         movie->add_rating(rating);
         insert_and_remove(movie->get_genre(), movie, movieId, oldRating);
@@ -337,9 +353,38 @@ StatusType streaming_database::rate_movie(int userId, int movieId, int rating)
 
 output_t<int> streaming_database::get_group_recommendation(int groupId)
 {
-	// TODO: Your code goes here
-    static int i = 0;
-    return (i++==0) ? 11 : 2;
+    if ( groupId <= 0) {
+        return output_t<int>(StatusType::INVALID_INPUT);
+    }
+    int id = 0;
+    try {
+        Group* group = m_groupsByID.search_and_return_data(groupId);
+        if (group->get_numUsers() <= 0) {
+            return output_t<int>(StatusType::FAILURE);
+        }
+        Genre genre = group->find_max();
+        switch (genre) {
+            case Genre::COMEDY:
+                id = m_comedyByRating.get_max();
+                break;
+            case Genre::DRAMA:
+                id = m_dramaByRating.get_max();
+                break;
+            case Genre::ACTION:
+                id = m_actionByRating.get_max();
+                break;
+            case Genre::FANTASY:
+                id = m_fantasyByRating.get_max();
+                break;
+        }
+    }
+    catch (const NodeNotFound& e) {
+        return output_t<int>(StatusType::FAILURE);
+    }
+    if (id == -1) {
+        return output_t<int>(StatusType::FAILURE);
+    }
+    return id;
 }
 
 
@@ -350,17 +395,20 @@ void streaming_database::insert_and_remove(const Genre genre, Movie* movie, cons
     switch (genre) {
         case Genre::COMEDY:
             m_comedyByRating.remove(movieId, movie->get_views(), oldRating);
-            ///todo get rating returns the old rating
             m_comedyByRating.insert(movie, movieId, movie->get_views(), movie->get_rating());
+            break;
         case Genre::DRAMA:
             m_dramaByRating.remove(movieId, movie->get_views(), oldRating);
             m_dramaByRating.insert(movie, movieId, movie->get_views(), movie->get_rating());
+            break;
         case Genre::ACTION:
             m_actionByRating.remove(movieId, movie->get_views(), oldRating);
             m_actionByRating.insert(movie, movieId, movie->get_views(), movie->get_rating());
+            break;
         case Genre::FANTASY:
             m_fantasyByRating.remove(movieId, movie->get_views(), oldRating);
             m_fantasyByRating.insert(movie, movieId, movie->get_views(), movie->get_rating());
+            break;
     }
     m_moviesByRating.remove(movieId, movie->get_views(), oldRating);
     m_moviesByRating.insert(movie, movieId, movie->get_views(), movie->get_rating());
@@ -371,11 +419,15 @@ void streaming_database::remove_by_genre(Movie* movie, const int movieId)
     switch (movie->get_genre()) {
         case Genre::COMEDY:
             m_comedyByRating.remove(movieId, movie->get_views(), movie->get_rating());
+            break;
         case Genre::DRAMA:
             m_dramaByRating.remove(movieId, movie->get_views(), movie->get_rating());
+            break;
         case Genre::ACTION:
             m_actionByRating.remove(movieId, movie->get_views(), movie->get_rating());
+            break;
         case Genre::FANTASY:
             m_fantasyByRating.remove(movieId, movie->get_views(), movie->get_rating());
+            break;
     }
 }

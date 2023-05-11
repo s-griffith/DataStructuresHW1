@@ -15,35 +15,6 @@ General Data Structure:
 
 ***Might be easier to just add a field in MultiTree that points to max term always (rather than make rank tree)
 
-Done!Notes:
--Genre is const
--Inside user class - each user has a groupPointer --> if null, you know it isn't in any group
--Inside user class - hold an array of length 5 (one per genre + NONE) that counts number of views of movies of each genre
--Inside movie class - rating field (int)
--Inside group class - array of genres, where each cell is total number of watches for that genre
-
-Classes: Should we make a parent class that contains only ID and VIP?
-Done!1. User:
-    - groupID: pointer to group that belongs to
-    - ID
-    - views array
-    - VIP
-    -
-Done!2. Movie:
-    - rating
-    - views
-    - genre
-    - ID
-    - VIP
-    - number of people who rated the movie (int)
-Done!3. Group:
-    - AVL tree of pointers of type user
-    - array of genres, where each cell is total number of views for that genre (totalViews)
-    - ID
-    - VIP
-    - totalUsers
-    - array of genres, to add 1 for each user when the group watches a movie (subtract) (GroupViews)
-    - 
 
 Functions:
 - streaming_database: *Shlomo
@@ -98,12 +69,12 @@ Done! - group_watch: *Sarah
 Done! need to check things- get_all_movies_count: *Shlomo
     - go to the AVL rank tree of relevant genre and return number of children held by the root
     - if genre=NONE, return counter of number of movies in system
-- get_all_movies: *Sarah
+Done! - get_all_movies: *Sarah
     - if None: return *opposite* inorder walk on allMovies MultiAVL tree
     - otherwise: return *opposite* inorder walk on movie MultiAVL tree by genre
-- get_num_views: *Shlomo
+Done!- get_num_views: *Shlomo
     - return number of views + group's GroupViews for that user
-- rate_movie: *Shlomo
+Done! - rate_movie: *Shlomo
     - ++ to number of people who rated the movie
     - += to the rating
     - insert and remove from MultiAVL allMovies tree

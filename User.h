@@ -57,6 +57,14 @@ public:
     Group* get_group() const;
 
     /*
+    * Helper function
+    * Returns the array of views
+    * @param
+    * @return - int*, array of views
+    */
+    int get_user_views(const Genre genre) const;
+
+    /*
     * Update the group that the user is a part of
     * @param - pointer to the group that the user is a part of
     * @return - void
@@ -85,15 +93,6 @@ public:
     */
     output_t<int> get_num_views(Genre genre);
 
-
-    /*
-    * Helper function
-    * Returns the array of views
-    * @param
-    * @return - int*, array of views
-    */
-    const int* get_user_views() const;
-
     /*
     * Helper function for group_watch in streaming
     * Updates the group's stats as needed
@@ -113,7 +112,7 @@ private:
      *   A pointer to the user's group
      */   
     int m_userID;
-    int m_userViews[5]; //an array
+    int m_userViews[4];
     bool m_VIP;
     Group* m_group;
 

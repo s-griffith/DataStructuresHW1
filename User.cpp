@@ -31,6 +31,22 @@ Group* User::get_group() const
     return m_group;
 }
 
+int User::get_user_views(const Genre genre) const {
+    int views = 0;
+    if (genre == Genre::NONE) {
+        for (int i = 0; i < 4; i++) {
+            views += m_userViews[i];
+        }
+    }
+    else {
+        views = m_userViews[static_cast<int>(genre)];
+    }
+    if (m_group != nullptr) {
+        views += m_group->get_group_views(genre);
+    }
+    return views;
+}
+
 //---------------------------------------Setters---------------------------------------------
 
 void User::update_group(Group* tmpGroup) 
@@ -49,8 +65,4 @@ void User::add_view(const Genre genre)
     if (m_group != nullptr) {
         m_group->add_view(genre);
     }
-}
-
-const int *User::get_user_views() const { //Need to update this so that it adds the group's views to the user views before returning
-    return m_userViews;
 }

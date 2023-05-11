@@ -76,7 +76,7 @@ public:
     * @param - a pointer to the user to be added, its ID, views, and whether it is a VIP
     * @return - StatusType
     */
-   StatusType add_user(User* user, const int userID, const int*  userViews, bool VIP); //might want to change some of these parameters
+    StatusType add_user(User* user, const int userID, bool VIP);
 
     /*
     * Helper function for remove_user in streaming:
@@ -84,7 +84,7 @@ public:
     * @param - a pointer to the user to be removed, its ID, and whether it is a VIP
     * @return - StatusType
     */
-   StatusType remove_user(User* user, const int userID, bool VIP);
+    StatusType remove_user(User* user, const int userID, bool VIP);
 
     /*
     * Helper function for remove_group in streaming:
@@ -92,9 +92,11 @@ public:
     * @param - none
     * @return - void
     */
-   void remove_group();
+    void remove_group();
 
-    const int *getMGroupViews() const;
+    int get_group_views(const Genre genre) const;
+
+    Genre find_max() const;
 
 private:
 
@@ -110,8 +112,8 @@ private:
     int m_id;
     int m_VIP;
     int m_numUsers;
-    int m_totalViews[5];
-    int m_groupViews[5]; //might need to make the users a friend class so they can access this
+    int m_totalViews[4];
+    int m_groupViews[4];
     Tree<GenericNode<User*>, User*> m_usersByID;
 
 };

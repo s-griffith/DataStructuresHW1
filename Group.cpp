@@ -41,16 +41,15 @@ void Group::group_watch(const Genre genre)
 
 //-------------------------------------Helper Functions for streaming----------------------------
 
-StatusType Group::add_user(User *user, const int userID, const int *userViews, bool VIP) {
+StatusType Group::add_user(User *user, const int userID, bool VIP) {
     m_usersByID.insert(user, userID);
     int temp;
-    for(int i=0; i<4; i++) //Might be cleaner to make them friend classes and do this within the user class
+    for(int i=0; i<4; i++)
     {
-        temp = user->m_userViews[i];
-        user->m_userViews[i]-=m_groupViews[i];
-        m_totalViews[i]+=temp;
+        m_totalViews[i] += user->m_userViews[i];
+        user->m_userViews[i] -= m_groupViews[i];
     }
-    m_VIP = (m_VIP||VIP); //CHANGE: IF VIP, ADD 1 ALSO: need to update the user's views, not the group's
+    m_VIP = (m_VIP||VIP);
     m_numUsers++;
     return StatusType::SUCCESS;
 }
@@ -76,6 +75,25 @@ void Group::remove_group()
     m_usersByID.remove_users();
 }
 
-const int *Group::getMGroupViews() const {
-    return m_groupViews;
+int Group::get_group_views(const Genre genre) const {
+    if (genre == Genre::NONE) {
+        int sum = 0;
+        for (int i = 0; i < 4; i++) {
+            sum += m_groupViews[i];
+        }
+        return sum;
+    }
+    return m_groupViews[static_cast<int>(genre)];
+}
+
+Genre Group::find_max() const
+{
+    Genre max = Genre::COMEDY;
+    int max_views = 0;
+    for (int i = 0; i < 4; i++) {
+        if (m_groupViews[i] > max_views) {
+            max = static_cast<Genre>(i);
+        }
+    }
+    return max;
 }
