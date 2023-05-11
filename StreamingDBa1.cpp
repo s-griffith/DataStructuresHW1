@@ -1,4 +1,5 @@
 #include "StreamingDBa1.h"
+#include <iostream>
 
 streaming_database::streaming_database():
     m_totalMovies(0),
@@ -87,6 +88,7 @@ StatusType streaming_database::remove_movie(int movieId)
         remove_by_genre(movie, movieId);
         m_moviesByRating.remove(movieId, movie->get_views(), movie->get_rating());
         m_moviesByID.remove(movieId);
+        m_totalMovies--;
         delete movie;
     }
     catch(const NodeNotFound& e) {
