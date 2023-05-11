@@ -43,7 +43,6 @@ void Group::group_watch(const Genre genre)
 
 StatusType Group::add_user(User *user, const int userID, bool VIP) {
     m_usersByID.insert(user, userID);
-    int temp;
     for(int i=0; i<4; i++)
     {
         m_totalViews[i] += user->m_userViews[i];

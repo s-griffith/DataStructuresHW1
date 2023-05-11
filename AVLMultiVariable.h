@@ -58,7 +58,7 @@ public:
      * @param - none
      * @return - the data of the max node
      */
-    ComplexNode<T>& search_and_return_max();
+    ComplexNode<T>* search_and_return_max();
     
     /*
      * Search for a specific node, according to the id, views, and rating given
@@ -130,7 +130,7 @@ void MultiTree<T>::insert(T data, const int id, const int views, const double ra
         this->m_node->m_height++;
         this->m_node->m_rating = rating;
         this->m_node->m_views = views;
-        m_max = m_node;
+        m_max = this->m_node;
         return;
     }
     //Find the proper location of the new node (when it's not the first):
@@ -239,7 +239,7 @@ void MultiTree<T>::remove(const int id, const int views, const int rating) {
 //-----------------------------------------Search Functions-----------------------------------------
 
 template<class T>
-ComplexNode<T>& MultiTree<T>::search_and_return_max() {
+ComplexNode<T>* MultiTree<T>::search_and_return_max() {
     ComplexNode<T>* node = this->m_node;
     while(node->m_right != nullptr) {
         node = node->m_right;

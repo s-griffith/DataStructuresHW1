@@ -58,7 +58,8 @@ StatusType streaming_database::add_movie(int movieId, Genre genre, int views, bo
             case Genre::FANTASY:
                 m_fantasyByRating.insert(newMovie, movieId, views, 0);
                 break;
-
+            default:
+                break;
         }
     }
     catch (const std::bad_alloc &e) {
@@ -270,20 +271,16 @@ output_t<int> streaming_database::get_all_movies_count(Genre genre)
     switch (genre) {
         case (Genre::COMEDY):
             return m_comedyByRating.getMNumOfNodes();
-            break;
         case Genre::DRAMA:
             return m_dramaByRating.getMNumOfNodes();
-            break;
         case Genre::ACTION:
             return m_actionByRating.getMNumOfNodes();
-            break;
         case Genre::FANTASY:
             return m_fantasyByRating.getMNumOfNodes();
-            break;
         case Genre::NONE:
             return m_totalMovies;
-            break;
     }
+    return output_t<int>(StatusType::FAILURE);
 }
 
 StatusType streaming_database::get_all_movies(Genre genre, int *const output)
@@ -376,6 +373,8 @@ output_t<int> streaming_database::get_group_recommendation(int groupId)
             case Genre::FANTASY:
                 id = m_fantasyByRating.get_max();
                 break;
+            default:
+                break;
         }
     }
     catch (const NodeNotFound& e) {
@@ -409,6 +408,8 @@ void streaming_database::insert_and_remove(const Genre genre, Movie* movie, cons
             m_fantasyByRating.remove(movieId, movie->get_views(), oldRating);
             m_fantasyByRating.insert(movie, movieId, movie->get_views(), movie->get_rating());
             break;
+        default:
+            break;
     }
     m_moviesByRating.remove(movieId, movie->get_views(), oldRating);
     m_moviesByRating.insert(movie, movieId, movie->get_views(), movie->get_rating());
@@ -428,6 +429,8 @@ void streaming_database::remove_by_genre(Movie* movie, const int movieId)
             break;
         case Genre::FANTASY:
             m_fantasyByRating.remove(movieId, movie->get_views(), movie->get_rating());
+            break;
+        default:
             break;
     }
 }
