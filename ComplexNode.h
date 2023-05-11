@@ -290,7 +290,7 @@ void ComplexNode<T>::printNode() {
     else {
         right = m_right->m_id;
     }
-    std::cout << "ID = " << Node<T>::m_id << ", Parent = " << parent << ", Left = " 
+    std::cout << "ID = " << Node<T>::m_id << ", Rating = " << m_rating << " , Views = " << m_views << ", Parent = " << parent << ", Left = " 
             << left << ", Right = " << right << std::endl;
 }
 

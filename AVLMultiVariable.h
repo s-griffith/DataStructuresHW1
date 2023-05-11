@@ -275,7 +275,7 @@ ComplexNode<T>& MultiTree<T>::search_recursively(const int id, const int views, 
     if (currentNode->m_views < views && currentNode->m_rating == rating) {
         return search_recursively(id, views, rating, currentNode->m_right);
     }
-    if (currentNode->m_id < id && currentNode->m_rating == rating && currentNode->m_views == views) {
+    if (currentNode->m_id > id && currentNode->m_rating == rating && currentNode->m_views == views) {
         return search_recursively(id, views, rating, currentNode->m_right);
     }
     return search_recursively(id, views, rating, currentNode->m_left);

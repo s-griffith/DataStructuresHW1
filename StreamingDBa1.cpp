@@ -224,9 +224,10 @@ StatusType streaming_database::user_watch(int userId, int movieId)
                 return StatusType::FAILURE;
             }
         }
+        int oldViews = movie->get_views();
         movie->add_view();
         Genre genre = movie->get_genre();
-        insert_and_remove(genre, movie, movieId, movie->get_rating());
+        insert_and_remove(genre, movie, movieId, oldViews, movie->get_rating());
         user->add_view(genre);
     }
     catch (const NodeNotFound& e) {
@@ -256,8 +257,9 @@ StatusType streaming_database::group_watch(int groupId,int movieId)
         }
         Genre genre = movie->get_genre();
         group->group_watch(genre);
+        int oldViews = movie->get_views();
         movie->add_view(group->get_numUsers());
-        insert_and_remove(genre, movie, movieId, movie->get_rating());
+        insert_and_remove(genre, movie, movieId, oldViews, movie->get_rating());
     }
     catch (const NodeNotFound& e) {
         return StatusType::FAILURE;
@@ -342,7 +344,7 @@ StatusType streaming_database::rate_movie(int userId, int movieId, int rating)
         }
         double oldRating = movie->get_rating();
         movie->add_rating(rating);
-        insert_and_remove(movie->get_genre(), movie, movieId, oldRating);
+        insert_and_remove(movie->get_genre(), movie, movieId, movie->get_views(), oldRating);
     }
     catch (const NodeNotFound& e) {
         return StatusType::FAILURE;
@@ -391,31 +393,32 @@ output_t<int> streaming_database::get_group_recommendation(int groupId)
 
 //---------------------------------------Private Helper Functions---------------------------------------------
 
-void streaming_database::insert_and_remove(const Genre genre, Movie* movie, const int movieId, const double oldRating)
+void streaming_database::insert_and_remove(const Genre genre, Movie* movie, const int movieId, const int oldViews,
+                                                                                                 const double oldRating)
 {
     switch (genre) {
         case Genre::COMEDY:
-            m_comedyByRating.remove(movieId, movie->get_views(), oldRating);
+            m_comedyByRating.remove(movieId, oldViews, oldRating);
             m_comedyByRating.insert(movie, movieId, movie->get_views(), movie->get_rating());
             break;
         case Genre::DRAMA:
-            m_dramaByRating.print_tree();
-            m_dramaByRating.remove(movieId, movie->get_views(), oldRating);
+            m_dramaByRating.remove(movieId, oldViews, oldRating);
             m_dramaByRating.insert(movie, movieId, movie->get_views(), movie->get_rating());
             break;
         case Genre::ACTION:
-            m_actionByRating.remove(movieId, movie->get_views(), oldRating);
+            m_actionByRating.remove(movieId, oldViews, oldRating);
             m_actionByRating.insert(movie, movieId, movie->get_views(), movie->get_rating());
             break;
         case Genre::FANTASY:
-            m_fantasyByRating.remove(movieId, movie->get_views(), oldRating);
+            m_fantasyByRating.print_tree();
+            m_fantasyByRating.remove(movieId, oldViews, oldRating);
             m_fantasyByRating.insert(movie, movieId, movie->get_views(), movie->get_rating());
             break;
         default:
             break;
     }
-    m_moviesByRating.print_tree();
-    m_moviesByRating.remove(movieId, movie->get_views(), oldRating);
+    //m_moviesByRating.print_tree();
+    m_moviesByRating.remove(movieId, oldViews, oldRating);
     m_moviesByRating.insert(movie, movieId, movie->get_views(), movie->get_rating());
 }
 
