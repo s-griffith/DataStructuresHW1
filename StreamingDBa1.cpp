@@ -320,7 +320,7 @@ output_t<int> streaming_database::get_num_views(int userId, Genre genre)
     }
     try {
         User* user = m_usersByID.search_and_return_data(userId);
-        return user->get_num_views(genre); 
+        return user->get_user_views(genre); 
     }
     catch (const NodeNotFound& e) {
         return StatusType::FAILURE;

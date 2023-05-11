@@ -6,8 +6,8 @@ Group::Group(const int groupID) :
     m_id(groupID),
     m_VIP(false),
     m_numUsers(0),
-    m_totalViews({0}),
-    m_groupViews({0}),
+    m_totalViews{0},
+    m_groupViews{0},
     m_usersByID()
 {}
 
