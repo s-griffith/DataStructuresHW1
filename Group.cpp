@@ -90,7 +90,7 @@ Genre Group::find_max() const
     Genre max = Genre::COMEDY;
     int max_views = 0;
     for (int i = 0; i < 4; i++) {
-        if (m_groupViews[i] > max_views) {
+        if (m_totalViews[i] > max_views) {
             max = static_cast<Genre>(i);
         }
     }

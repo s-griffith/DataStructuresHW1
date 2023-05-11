@@ -49,7 +49,7 @@ public:
      * @param - The ID, views, and rating of the node that needs to be removed
      * @return - void
      */
-    void remove(const int id, const int views, const int rating);
+    void remove(const int id, const int views, const double rating);
 
     int getMNumOfNodes() const;
 
@@ -65,21 +65,21 @@ public:
      * @param - The ID, views, and rating of the requested node
      * @return - the data of the node
      */
-    T& search_and_return_data(const int id, const int views, const int rating);
+    T& search_and_return_data(const int id, const int views, const double rating);
 
     /*
      * Search for node with a specific id, according to the id, views, and rating given
      * @param - The ID, views, and rating of the requested node
      * @return - the requested node
      */
-    ComplexNode<T>& search_specific_id(const int id, const int views, const int rating);
+    ComplexNode<T>& search_specific_id(const int id, const int views, const double rating);
 
     /*
      * Recursively search the tree, according to the id, views, and rating given, starting with the root
      * @param - The ID, views, and rating of the requested node, and the root of its tree
      * @return - the requested node
      */
-    ComplexNode<T>& search_recursively(const int id, const int views, const int rating, ComplexNode<T>* currentNode);
+    ComplexNode<T>& search_recursively(const int id, const int views, const double rating, ComplexNode<T>* currentNode);
 
     /*
      * Helper function for get_all_movies in streaming:
@@ -213,7 +213,7 @@ void MultiTree<T>::insert(T data, const int id, const int views, const double ra
 
 
 template<class T>
-void MultiTree<T>::remove(const int id, const int views, const int rating) {
+void MultiTree<T>::remove(const int id, const int views, const double rating) {
     if (this->m_node->m_id == id && this->m_node->m_right == nullptr && this->m_node->m_left == nullptr 
                                                                                 && this->m_node->m_parent == nullptr) {
         this->m_node->m_data = nullptr;
@@ -249,19 +249,19 @@ ComplexNode<T>* MultiTree<T>::search_and_return_max() {
 
 
 template<class T>
-T& MultiTree<T>::search_and_return_data(const int id, const int views, const int rating) {
+T& MultiTree<T>::search_and_return_data(const int id, const int views, const double rating) {
     return search_recursively(id, views, rating, this->m_node).m_data;
 }
 
 
 template<class T>
-ComplexNode<T>& MultiTree<T>::search_specific_id(const int id, const int views, const int rating) {
+ComplexNode<T>& MultiTree<T>::search_specific_id(const int id, const int views, const double rating) {
     return search_recursively(id, views, rating, this->m_node);
 }
 
 
 template<class T>
-ComplexNode<T>& MultiTree<T>::search_recursively(const int id, const int views, const int rating,
+ComplexNode<T>& MultiTree<T>::search_recursively(const int id, const int views, const double rating,
              ComplexNode<T>* currentNode) {
     if (currentNode == nullptr) {
         throw NodeNotFound();
@@ -275,7 +275,7 @@ ComplexNode<T>& MultiTree<T>::search_recursively(const int id, const int views, 
     if (currentNode->m_views < views && currentNode->m_rating == rating) {
         return search_recursively(id, views, rating, currentNode->m_right);
     }
-    if (currentNode->m_id > id && currentNode->m_rating == rating && currentNode->m_views == views) {
+    if (currentNode->m_id < id && currentNode->m_rating == rating && currentNode->m_views == views) {
         return search_recursively(id, views, rating, currentNode->m_right);
     }
     return search_recursively(id, views, rating, currentNode->m_left);
