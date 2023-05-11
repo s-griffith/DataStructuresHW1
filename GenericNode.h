@@ -281,6 +281,7 @@ template <class T>
 void GenericNode<T>::inorder_remove() {
     if (this != nullptr && this->m_data != nullptr) {
         m_left->inorder_remove();
+        this->m_data->update_views();
         this->m_data->remove_group();
         m_right->inorder_remove();
     }

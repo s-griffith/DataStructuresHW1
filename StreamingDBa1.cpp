@@ -410,14 +410,12 @@ void streaming_database::insert_and_remove(const Genre genre, Movie* movie, cons
             m_actionByRating.insert(movie, movieId, movie->get_views(), movie->get_rating());
             break;
         case Genre::FANTASY:
-            m_fantasyByRating.print_tree();
             m_fantasyByRating.remove(movieId, oldViews, oldRating);
             m_fantasyByRating.insert(movie, movieId, movie->get_views(), movie->get_rating());
             break;
         default:
             break;
     }
-    //m_moviesByRating.print_tree();
     m_moviesByRating.remove(movieId, oldViews, oldRating);
     m_moviesByRating.insert(movie, movieId, movie->get_views(), movie->get_rating());
 }

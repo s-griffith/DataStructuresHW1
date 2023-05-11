@@ -66,3 +66,10 @@ void User::add_view(const Genre genre)
         m_group->add_view(genre);
     }
 }
+
+void User::update_views()
+{
+    for (int i = 0; i < 4; i++) {
+        m_userViews[i] += m_group->get_group_views(static_cast<Genre>(i));
+    }
+}

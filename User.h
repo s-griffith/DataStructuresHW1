@@ -99,8 +99,9 @@ public:
     * @param - ID of the movie to watch
     * @return - StatusType
     */
-   StatusType group_watch(int movieID);
+    StatusType group_watch(int movieID);
 
+    void update_views();
 
 private:
 
