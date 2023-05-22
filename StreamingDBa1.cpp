@@ -208,6 +208,9 @@ StatusType streaming_database::add_user_to_group(int userId, int groupId)
         group->add_user(user, userId, user->isVIP());
         user->update_group(group);
     }
+    else {
+        return StatusType::FAILURE;
+    }
     return StatusType::SUCCESS;
 }
 
