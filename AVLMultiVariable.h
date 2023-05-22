@@ -230,7 +230,6 @@ void MultiTree<T>::remove(const int id, const int views, const double rating) {
     delete toRemove;
     //Go up the tree and check the balance factors and complete needed rotations
     Tree<ComplexNode<T>, T>::rebalance_tree(nodeToFix);
-    ///TODO: check if will decrease if failed
     m_numOfNodes--;
     m_max = search_and_return_max();
 }

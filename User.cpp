@@ -4,7 +4,7 @@
 
 User::User(const int userID, const bool isVIP):
     m_userID(userID),
-    m_userViews{0}, //double check that this initializes it to all zeros!!
+    m_userViews{0},
     m_VIP(isVIP),
     m_group(nullptr) 
 {}

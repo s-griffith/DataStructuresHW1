@@ -102,6 +102,6 @@ private:
    int m_views;
    bool m_VIP;
    int m_numRates;
-   double m_rating; //make sure that this should be a double and not an int!
+   int m_rating;
 };
 #endif //MOVIE_H
