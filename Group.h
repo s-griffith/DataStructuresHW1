@@ -42,12 +42,6 @@ public:
     ~Group() = default;
 
     /*
-    * Return the group's ID
-    * @return - integer of the group's ID
-    */
-    int get_ID() const;
-
-    /*
     * Return whether the group is a VIP group
     * @return - bool - true if the user is a VIP, otherwise false
     */

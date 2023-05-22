@@ -13,10 +13,6 @@ Group::Group(const int groupID) :
 
 //---------------------------------------Getters---------------------------------------------
 
-int Group::get_ID() const
-{
-    return m_id;
-}
 
 bool Group::is_VIP() const
 {

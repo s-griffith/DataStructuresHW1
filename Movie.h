@@ -79,12 +79,6 @@ public:
     */
     void add_rating(const int rating);
 
-    /*
-    * Update the movie's VIP status
-    * @param - void
-    * @return - void
-    */
-   void update_VIP();
 
 private:
 

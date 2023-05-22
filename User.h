@@ -86,21 +86,10 @@ public:
     void add_view(const Genre genre);
 
     /*
-    * Helper function for get_num_views in streaming
-    * Returns the number of views the user has according to the input
-    * @param - genre of the views to return
-    * @return - int, the number of views, StatusType
+    * Calculates and updates the total views of the user, by adding his group views
+    * @param - none
+    * @return - void
     */
-    output_t<int> get_num_views(Genre genre);
-
-    /*
-    * Helper function for group_watch in streaming
-    * Updates the group's stats as needed
-    * @param - ID of the movie to watch
-    * @return - StatusType
-    */
-    StatusType group_watch(int movieID);
-
     void update_views();
 
 private:
