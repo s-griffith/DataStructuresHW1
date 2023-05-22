@@ -97,7 +97,6 @@ Genre Group::find_max() const
     int max_views = 0;
     for (int i = 0; i < 4; i++) {
         if (m_totalViews[i] > max_views) {
-            std::cout << "m_totalViews " << i << "is " << m_totalViews[i] << std::endl;
             max_views = m_totalViews[i];
             max = static_cast<Genre>(i);
         }
