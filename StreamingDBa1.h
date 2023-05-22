@@ -37,10 +37,20 @@ private:
 	MultiTree<Movie*> m_dramaByRating;
 	MultiTree<Movie*> m_actionByRating;
 	MultiTree<Movie*> m_fantasyByRating;
-	
-	//Helper functions:
-	void insert_and_remove(const Genre genre, Movie* movie, const int movieId, const int oldViews, 
-																								const double oldRating);
+
+    /*
+     * helper function
+     * Remove a movie and then insert it again in the right place
+    * @param - genre of the movie, pointer to the movie, id of the movie, number of old views, old rating
+    * @return - void
+    */
+    void insert_and_remove(const Genre genre, Movie* movie, const int movieId, const int oldViews, const double oldRating);
+
+    /*
+    * Helper function
+    * @param - pointer to the movie, id of the movie
+    * @return - void
+    */
 	void remove_by_genre(Movie* movie, const int movieId);
 public:
 	// <DO-NOT-MODIFY> {
