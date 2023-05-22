@@ -204,7 +204,7 @@ StatusType streaming_database::add_user_to_group(int userId, int groupId)
     catch (const NodeNotFound& e) {
         return StatusType::FAILURE;
     }
-    if(!user->get_group()) { //What to do if he's already in a group?  What to return?
+    if(!user->get_group()) {
         group->add_user(user, userId, user->isVIP());
         user->update_group(group);
     }
