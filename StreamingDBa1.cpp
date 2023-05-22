@@ -216,18 +216,20 @@ StatusType streaming_database::add_user_to_group(int userId, int groupId)
 
 StatusType streaming_database::user_watch(int userId, int movieId)
 {
+    int oldViews = 0;
+    Movie* movie  = nullptr;
     if (userId <= 0 || movieId <= 0) {
         return StatusType::INVALID_INPUT;
     }
     try {
         User* user = m_usersByID.search_and_return_data(userId);
-        Movie* movie = m_moviesByID.search_and_return_data(movieId);
+        movie = m_moviesByID.search_and_return_data(movieId);
         if (movie->isVIP()) {
             if (!(user->isVIP())) {
                 return StatusType::FAILURE;
             }
         }
-        int oldViews = movie->get_views();
+        oldViews = movie->get_views();
         movie->add_view();
         Genre genre = movie->get_genre();
         insert_and_remove(genre, movie, movieId, oldViews, movie->get_rating());
@@ -237,6 +239,8 @@ StatusType streaming_database::user_watch(int userId, int movieId)
         return StatusType::FAILURE;
     }
     catch (const std::bad_alloc& e) {
+        movie->add_view(-1);
+        m_moviesByID.insert(movie, movieId);
         return StatusType::ALLOCATION_ERROR;
     }
     return StatusType::SUCCESS;
