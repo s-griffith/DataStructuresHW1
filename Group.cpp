@@ -48,7 +48,10 @@ StatusType Group::add_user(User *user, const int userID, bool VIP) {
         m_totalViews[i] += user->m_userViews[i];
         user->m_userViews[i] -= m_groupViews[i];
     }
-    m_VIP = (m_VIP||VIP);
+    if(VIP)
+    {
+        m_VIP++;
+    }
     m_numUsers++;
     return StatusType::SUCCESS;
 }
