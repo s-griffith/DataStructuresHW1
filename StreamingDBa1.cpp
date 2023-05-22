@@ -248,12 +248,13 @@ StatusType streaming_database::user_watch(int userId, int movieId)
 
 StatusType streaming_database::group_watch(int groupId,int movieId)
 {
+    Movie* movie;
     if (groupId <= 0 || movieId <= 0) {
         return StatusType::INVALID_INPUT;
     }
     try {
         Group* group = m_groupsByID.search_and_return_data(groupId);
-        Movie* movie = m_moviesByID.search_and_return_data(movieId);
+        movie = m_moviesByID.search_and_return_data(movieId);
         if (movie->isVIP()) {
             if (!(group->is_VIP())) {
                 return StatusType::FAILURE;
@@ -272,6 +273,8 @@ StatusType streaming_database::group_watch(int groupId,int movieId)
         return StatusType::FAILURE;
     }
     catch (const std::bad_alloc& e) {
+        movie->add_view(-1);
+        m_moviesByID.insert(movie, movieId);
         return StatusType::ALLOCATION_ERROR;
     }
 	return StatusType::SUCCESS;
