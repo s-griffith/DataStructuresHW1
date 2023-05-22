@@ -68,8 +68,11 @@ StatusType Group::remove_user(User* user, const int userID, bool VIP)
     catch (const NodeNotFound& e) {
         return StatusType::FAILURE;
     }
+    for(int i=0; i<4; i++) {
+        user->m_userViews[i] += m_groupViews[i];
+        m_totalViews[i] -= user->m_userViews[i];
+    }
     return StatusType::SUCCESS;
-    //Do we need to subtract the user's views from the total views? so that the group remains with only current member views??
 }
 
 void Group::remove_group()
@@ -94,6 +97,7 @@ Genre Group::find_max() const
     int max_views = 0;
     for (int i = 0; i < 4; i++) {
         if (m_totalViews[i] > max_views) {
+            std::cout << "m_totalViews " << i << "is " << m_totalViews[i] << std::endl;
             max_views = m_totalViews[i];
             max = static_cast<Genre>(i);
         }
