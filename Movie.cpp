@@ -33,7 +33,7 @@ double Movie::get_rating() const
     if (m_numRates == 0) {
         return 0;
     }
-    return m_rating/m_numRates;
+    return static_cast<double>(m_rating)/m_numRates;
 }
 
 int Movie::get_views() const
