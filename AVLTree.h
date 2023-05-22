@@ -26,7 +26,7 @@ public:
 
     /*
     * Copy Constructor and Assignment Operator of Tree class
-    * world_cup does not allow two of the same player or team (repeating ID's).
+    * streaming does not allow two of the same user, movie, or group (repeating ID's).
     * Therefore the system does not allow a copy constructor or assignment operator.
     */
     Tree(const Tree& other) = delete;
@@ -96,22 +96,12 @@ public:
     virtual T& search_and_return_data(const int id) const;
 
     /*
-    * Helper function for get_all_players in world_cup:
-    * Add all of the tree keys to the given array
-    * @param - an array
-    * @return - none
+    * Helper function for remove_group in streaming:
+    * Go over the users in the group and update the relevant fields
+    * @param - none
+    * @return - void
     */
-    void get_all_data(int* const array) const;
-
     void remove_users();
-
-    /*
-     * Helper function for testing:
-     * Prints the tree, node by node
-     * @param - none
-     * @return - void
-     */
-    void print_tree();
 
 protected:
 
@@ -121,17 +111,6 @@ protected:
     * @return - a pointer to the node from which the tree is no longer balanced
     */
     N* make_node_leaf(N* node);
-
-private:
-
-    /*
-     * Helper functions for update_closest:
-     * Finds the right and left closest players
-     * @param - Node (N) of the current player
-     * @return - Node (N) of the closest player
-     */
-    N* findLeftClosest(N* currentTeam);
-    N* findRightClosest(N* currentTeam);
 
 };
 
@@ -350,15 +329,7 @@ T& Tree<N, T>::search_and_return_data(const int id) const
 }
 
 
-//-----------------------------------------Helper Functions for world_cup-----------------------------------------
-
-template <class N, class T>
-void Tree<N, T>::get_all_data(int* const array) const
-{
-    if (this != nullptr) {
-        m_node->get_data_inorder(array, 0);
-    }
-}
+//-----------------------------------------Helper Function for streaming-----------------------------------------
 
 template <class N, class T>
 void Tree<N, T>::remove_users()
@@ -463,74 +434,6 @@ N* Tree<N, T>::make_node_leaf(N* node)
     return parentToReturn;
 }
 
-
-template<class N, class T>
-N* Tree<N, T>::findLeftClosest(N* currentTeam)
-{
-    N* closestLeft = currentTeam;
-    if (currentTeam->m_left != nullptr) {
-        closestLeft = currentTeam->m_left;
-        while (closestLeft->m_right != nullptr) {
-            closestLeft = closestLeft->m_right;
-        }
-    }
-    else if ((currentTeam->m_parent != nullptr) && (currentTeam->m_parent->m_right == currentTeam)) {
-        closestLeft = currentTeam->m_parent;
-    }
-    else if (currentTeam->m_parent != nullptr) {
-        while (closestLeft->m_parent != nullptr && closestLeft->m_parent->m_left == closestLeft) {
-            closestLeft = closestLeft->m_parent;
-        }
-        if (closestLeft->m_parent == nullptr) {
-            closestLeft = nullptr;
-        }
-        else {
-            closestLeft = closestLeft->m_parent;
-        }
-    }
-    if ((closestLeft != nullptr) && (closestLeft->m_id != currentTeam->m_id)) {
-        return closestLeft;
-    }
-    return nullptr;
-}
-
-
-template<class N, class T>
-N* Tree<N, T>::findRightClosest(N* currentTeam)
-{
-    N* closestRight = currentTeam;
-    if (currentTeam->m_right != nullptr) {
-        closestRight = currentTeam->m_right;
-        while (closestRight->m_left != nullptr) {
-            closestRight = closestRight->m_left;
-        }
-    }
-    else if ((currentTeam->m_parent != nullptr) && (currentTeam->m_parent->m_left == currentTeam)) {
-        closestRight = currentTeam->m_parent;
-    }
-    else if (currentTeam->m_parent != nullptr) {
-        while (closestRight->m_parent != nullptr && closestRight->m_parent->m_right == closestRight) {
-            closestRight = closestRight->m_parent;
-        }
-        if (closestRight->m_parent == nullptr) {
-            closestRight = nullptr;
-        }
-        else {
-            closestRight = closestRight->m_parent;
-        }
-    }
-    if ((closestRight != nullptr) && (closestRight->m_id != currentTeam->m_id)) {
-        return closestRight;
-    }
-    return nullptr;
-}
-
-//-----------------------------------------Helper Function for Testing--------------------------
-
-template<class N, class T>
-void Tree<N, T>::print_tree() {
-    m_node->inorderWalkNode(1);
-}
 
 //----------------------------------------------------------------------------------------------
 

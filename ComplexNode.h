@@ -3,7 +3,6 @@
 
 #include "Node.h"
 #include "Movie.h"
-#include <iostream>
 
 /*
 * Class Complex Node : Node
@@ -92,8 +91,8 @@ private:
     /*
      * The internal fields of ComplexNode:
      *   Pointers to the parent node and two child nodes
-     *   The goals the player represented by ComplexNode scored
-     *   The cards the player represented by ComplexNode received
+     *   The views the movie has
+     *   The rating of the movie
      */
     ComplexNode<T>* m_parent;
     ComplexNode<T>* m_left;
@@ -111,16 +110,6 @@ private:
 
     template <class ComplexNode, class N>
     friend class Tree;
-    
-    /*
-     * Helper functions for testing:
-     * Prints a tree, node by node
-     * @param - none
-     * @return - void
-     */
-    void inorderWalkNode(bool flag);
-    void printNode();
-    void printData();
 
 };
 
@@ -269,51 +258,6 @@ int ComplexNode<T>::get_data_inorder(int* const array, int index) const
     return index;
 }
 
-template <class T>
-void ComplexNode<T>::printNode() {
-    int parent, left, right;
-    if (m_parent == nullptr) {
-        parent = -1;
-    }
-    else {
-        parent = m_parent->m_id;
-    }
-    if (m_left == nullptr) {
-        left = -1;
-    }
-    else {
-        left = m_left->m_id;
-    }
-    if (m_right == nullptr) {
-        right = -1;
-    }
-    else {
-        right = m_right->m_id;
-    }
-    std::cout << "ID = " << Node<T>::m_id << ", Rating = " << m_rating << " , Views = " << m_views << ", Parent = " << parent << ", Left = " 
-            << left << ", Right = " << right << std::endl;
-}
-
-
-template <class T>
-void ComplexNode<T>::printData() {
-    std::cout << "ID = " << Node<T>::m_id << std::endl;
-}
-
-
-template <class T>
-void ComplexNode<T>::inorderWalkNode(bool flag) {
-    if (this != nullptr) {
-        m_left->inorderWalkNode(flag);
-        if (flag) {
-            this->printNode();
-        }
-        else {
-            this->printData();
-        }
-        m_right->inorderWalkNode(flag);
-    }
-}
 
 //-----------------------------------------------------------------------------------------------------------
 

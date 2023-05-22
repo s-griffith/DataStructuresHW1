@@ -1,5 +1,4 @@
 #include "StreamingDBa1.h"
-#include <iostream>
 
 streaming_database::streaming_database():
     m_totalMovies(0),
@@ -284,13 +283,13 @@ output_t<int> streaming_database::get_all_movies_count(Genre genre)
 {
     switch (genre) {
         case (Genre::COMEDY):
-            return m_comedyByRating.getMNumOfNodes();
+            return m_comedyByRating.get_num_nodes();
         case Genre::DRAMA:
-            return m_dramaByRating.getMNumOfNodes();
+            return m_dramaByRating.get_num_nodes();
         case Genre::ACTION:
-            return m_actionByRating.getMNumOfNodes();
+            return m_actionByRating.get_num_nodes();
         case Genre::FANTASY:
-            return m_fantasyByRating.getMNumOfNodes();
+            return m_fantasyByRating.get_num_nodes();
         case Genre::NONE:
             return m_totalMovies;
     }

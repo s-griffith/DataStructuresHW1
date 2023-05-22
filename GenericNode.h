@@ -21,7 +21,7 @@ public:
 
     /*
     * Copy Constructor and Assignment Operator of GenericNode class
-    * world_cup does not allow two of the same player or team (repeating ID's).
+    * streaming does not allow two of the same user, movie, or group (repeating ID's).
     * Therefore the system does not allow a copy constructor or assignment operator.
     */
     GenericNode(const GenericNode&) = delete;
@@ -33,14 +33,6 @@ public:
     * @return - void
     */
     ~GenericNode() = default;
-
-    /*
-     * Helper function for unite_teams in world_cup:
-     * Updates the new team ID of each player
-     * @param - a pointer to the new team containing the players
-     * @return - none
-     */
-    //void inorderWalkTeamID(Team* team);
 
     /*
     * Returns the height of a node
@@ -102,29 +94,18 @@ private:
     void inorder_remove();
 
     /*
-     * The internal fields of GenericNode: pointers to the parent node and two child nodes
-     */
-    GenericNode* m_parent;
-    GenericNode* m_left;
-    GenericNode* m_right;
-
-    /*
      * The following class is a friend class in order to allow full access to private fields and functions of
      * GenericNode, allowing GenericNode to be a mostly private class, while allowing the system to run smoothly.
     */
     template <class N, class M>
     friend class Tree;
 
-    
     /*
-     * Helper functions for testing:
-     * Prints a tree, node by node
-     * @param - none
-     * @return - void
-     */    
-    void inorderWalkNode(bool flag);
-    void printNode();
-    void printData();
+     * The internal fields of GenericNode: pointers to the parent node and two child nodes
+     */
+    GenericNode* m_parent;
+    GenericNode* m_left;
+    GenericNode* m_right;
 
 };
 
@@ -138,24 +119,12 @@ GenericNode<T>::GenericNode() :
         m_right(nullptr)
 {}
 
-//--------------------------------Public Helper Functions for world_cup--------------------------------------------
-
-
-/*template <class T>
-void GenericNode<T>::inorderWalkTeamID(Team* team) {
-    if (this != nullptr && this->m_data != nullptr) {
-        m_left->inorderWalkTeamID(team);
-        this->m_data->update_team(team);
-        m_right->inorderWalkTeamID(team);
-    }
-}*/
-
+//--------------------------------Public Helper Function for streaming--------------------------------------------
 
 template<class T>
 int GenericNode<T>::get_height() const {
     return this->m_height;
 }
-
 
 //--------------------------------------------Rotations---------------------------------------------------
 
@@ -275,7 +244,7 @@ void GenericNode<T>::update_height()
     }
 }
 
-//------------------------------------Helper Functions for streaming-------------------------------------------------
+//------------------------------------Helper Function for streaming-------------------------------------------------
 
 template <class T>
 void GenericNode<T>::inorder_remove() {
@@ -284,52 +253,6 @@ void GenericNode<T>::inorder_remove() {
         this->m_data->update_views();
         this->m_data->remove_group();
         m_right->inorder_remove();
-    }
-}
-//------------------------------------Printing Functions for Testing-------------------------------------------------
-
-template <class T>
-void GenericNode<T>::printNode() {
-    int parent, left, right;
-    if (m_parent == nullptr) {
-        parent = -1;
-    }
-    else {
-        parent = m_parent->m_id;
-    }
-    if (m_left == nullptr) {
-        left = -1;
-    }
-    else {
-        left = m_left->m_id;
-    }
-    if (m_right == nullptr) {
-        right = -1;
-    }
-    else {
-        right = m_right->m_id;
-    }
-    std::cout << "ID = " << this->m_id << ", Parent = " << parent << ", Left = " << left << ", Right = " << right << ", Height = " << this->m_height << ", BF = " << this->m_bf << std::endl;
-}
-
-
-template <class T>
-void GenericNode<T>::printData() {
-    std::cout << "Data = " << this->m_data << std::endl;
-}
-
-
-template <class T>
-void GenericNode<T>::inorderWalkNode(bool flag) {
-    if (this != nullptr) {
-        m_left->inorderWalkNode(flag);
-        if (flag) {
-            this->printNode();
-        }
-        else {
-            this->printData();
-        }
-        m_right->inorderWalkNode(flag);
     }
 }
 

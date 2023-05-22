@@ -51,8 +51,6 @@ public:
      */
     void remove(const int id, const int views, const double rating);
 
-    int getMNumOfNodes() const;
-
     /*
      * Search for max node by going down the right side of the tree
      * @param - none
@@ -89,18 +87,25 @@ public:
      */
     void get_all_data(int* const array) const;
 
-    int get_max() const;
+    /*
+     * Gets the number of nodes in the tree
+     * @param - none
+     * @return - int, the number of nodes in the tree
+     */
+    int get_num_nodes() const;
 
     /*
-     * Helper function for testing:
-     * Prints the tree, node by node
+     * Gets the largest node in the tree
      * @param - none
-     * @return - void
+     * @return - int, the largest node's id
      */
-    void print_tree();
+    int get_max() const;
+
 private:
     /*
      * Internal fields for MultiTree:
+     *    The number of nodes in the tree
+     *    The largest node in the tree
     */
     int m_numOfNodes;
     ComplexNode<T>* m_max;
@@ -117,11 +122,10 @@ MultiTree<T>::MultiTree() :
 {}
 
 //----------------------------------Insert and Remove---------------------------------
-//Highest rating --> Highest views --> Lowest ID number
-//Highest goals --> Highest Cards --> Lowest ID
 
 template<class T>
-void MultiTree<T>::insert(T data, const int id, const int views, const double rating) {
+void MultiTree<T>::insert(T data, const int id, const int views, const double rating) 
+{
     m_numOfNodes++;
     //If this is the first node in the tree:
     if (this->m_node->m_height == -1) {
@@ -213,7 +217,8 @@ void MultiTree<T>::insert(T data, const int id, const int views, const double ra
 
 
 template<class T>
-void MultiTree<T>::remove(const int id, const int views, const double rating) {
+void MultiTree<T>::remove(const int id, const int views, const double rating) 
+{
     if (this->m_node->m_id == id && this->m_node->m_right == nullptr && this->m_node->m_left == nullptr 
                                                                                 && this->m_node->m_parent == nullptr) {
         this->m_node->m_data = nullptr;
@@ -238,7 +243,8 @@ void MultiTree<T>::remove(const int id, const int views, const double rating) {
 //-----------------------------------------Search Functions-----------------------------------------
 
 template<class T>
-ComplexNode<T>* MultiTree<T>::search_and_return_max() {
+ComplexNode<T>* MultiTree<T>::search_and_return_max() 
+{
     ComplexNode<T>* node = this->m_node;
     while(node->m_right != nullptr) {
         node = node->m_right;
@@ -248,20 +254,23 @@ ComplexNode<T>* MultiTree<T>::search_and_return_max() {
 
 
 template<class T>
-T& MultiTree<T>::search_and_return_data(const int id, const int views, const double rating) {
+T& MultiTree<T>::search_and_return_data(const int id, const int views, const double rating) 
+{
     return search_recursively(id, views, rating, this->m_node).m_data;
 }
 
 
 template<class T>
-ComplexNode<T>& MultiTree<T>::search_specific_id(const int id, const int views, const double rating) {
+ComplexNode<T>& MultiTree<T>::search_specific_id(const int id, const int views, const double rating) 
+{
     return search_recursively(id, views, rating, this->m_node);
 }
 
 
 template<class T>
 ComplexNode<T>& MultiTree<T>::search_recursively(const int id, const int views, const double rating,
-             ComplexNode<T>* currentNode) {
+             ComplexNode<T>* currentNode) 
+{
     if (currentNode == nullptr) {
         throw NodeNotFound();
     }
@@ -287,12 +296,20 @@ template <class T>
 void MultiTree<T>::get_all_data(int* const array) const
 {
     if (m_numOfNodes <= 0) {
-        throw NodeNotFound(); //Maybe make this into something else
+        throw NodeNotFound();
     }
     if (this != nullptr) {
         this->m_node->get_data_inorder(array, 0);
     }
 }
+
+
+template<class T>
+int MultiTree<T>::get_num_nodes() const 
+{
+    return m_numOfNodes;
+}
+
 
 template <class T>
 int MultiTree<T>::get_max() const
@@ -301,17 +318,6 @@ int MultiTree<T>::get_max() const
         return -1;
     }
     return m_max->getID();
-}
-//-----------------------------------------Helper Function for Testing--------------------------
-
-template<class T>
-void MultiTree<T>::print_tree() {
-    this->m_node->inorderWalkNode(1);
-}
-
-template<class T>
-int MultiTree<T>::getMNumOfNodes() const {
-    return m_numOfNodes;
 }
 
 //----------------------------------------------------------------------------------------------

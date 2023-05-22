@@ -17,16 +17,8 @@ public:
     Node();
 
     /*
-    * Constructor of Node class
-    * Used in unite_teams to make a new node containing the desired player
-    * @param - data the node holds
-    * @return - A new instance of Node
-    */     
-    Node(T data);
-
-    /*
     * Copy Constructor and Assignment Operator of Node class
-    * world_cup does not allow two of the same player or team (repeating ID's).
+    * streaming does not allow two of the same user, movie, or group (repeating ID's).
     * Therefore the system does not allow a copy constructor or assignment operator.
     */    
     Node(const Node&) = delete;
@@ -65,9 +57,6 @@ protected:
      * Node.
      * This allows Node to be a mostly protected class, while allowing the system to run smoothly.
     */    
-    template <class K>
-    friend class TreeExtraPointer;
-
     template <class S>
     friend class MultiTree;
 
@@ -82,14 +71,6 @@ Node<T>::Node() :
     m_height(-1),
     m_bf(0),
     m_id(0)
-{}
-
-template <class T>
-Node<T>::Node(T data) :
-    m_data(data),
-    m_height(-1),
-    m_bf(0),
-    m_id(data->get_playerId())
 {}
 
 template <class T>
