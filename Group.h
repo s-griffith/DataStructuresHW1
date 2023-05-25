@@ -69,9 +69,9 @@ public:
     * Helper function for add_user_to_group in streaming:
     * Adds the user to the group and updates the group's stats accordingly
     * @param - a pointer to the user to be added, its ID, views, and whether it is a VIP
-    * @return - StatusType
+    * @return - void
     */
-    StatusType add_user(User* user, const int userID, bool VIP);
+    void add_user(User* user, const int userID, bool VIP);
 
     /*
     * Helper function for remove_user in streaming:

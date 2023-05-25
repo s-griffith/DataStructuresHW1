@@ -11,7 +11,7 @@ User::User(const int userID, const bool isVIP):
 
 User::~User()
 {
-    m_group = nullptr; //might not need this! might be able to use default
+    m_group = nullptr;
 }
 
 //---------------------------------------Getters---------------------------------------------

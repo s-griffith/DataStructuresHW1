@@ -37,7 +37,7 @@ void Group::group_watch(const Genre genre)
 
 //-------------------------------------Helper Functions for streaming----------------------------
 
-StatusType Group::add_user(User *user, const int userID, bool VIP) {
+void Group::add_user(User *user, const int userID, bool VIP) {
     m_usersByID.insert(user, userID);
     for(int i=0; i<4; i++)
     {
@@ -49,7 +49,6 @@ StatusType Group::add_user(User *user, const int userID, bool VIP) {
         m_VIP++;
     }
     m_numUsers++;
-    return StatusType::SUCCESS;
 }
 
 StatusType Group::remove_user(User* user, const int userID, bool VIP) 
